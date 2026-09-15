@@ -1,0 +1,26 @@
+loan_id,grade,loan_purpose,homeownership,verified_income,balance_usd,coupon_pct,loan_status,decision_tier,flags
+8524,B,major_purchase,RENT,Verified,40000.0,11.99,Late (31-120 days),T1_DECLINE,prime+verified + purpose:elevated
+9009,C,house,RENT,Verified,39056.0,13.58,Current,T1_DECLINE,purpose:house
+4553,B,small_business,MORTGAGE,Verified,39015.0,11.98,Current,T1_DECLINE,prime+verified
+5762,A,home_improvement,MORTGAGE,Verified,38973.0,5.31,Late (31-120 days),T1_DECLINE,prime+verified
+4113,B,other,RENT,Verified,38947.0,9.43,Current,T1_DECLINE,prime+verified
+4417,B,debt_consolidation,MORTGAGE,Verified,38947.0,9.43,Current,T1_DECLINE,prime+verified
+3098,A,debt_consolidation,MORTGAGE,Verified,38889.0,7.34,Current,T1_DECLINE,prime+verified
+3589,C,house,MORTGAGE,Not Verified,38630.0,15.04,Current,T1_DECLINE,purpose:house
+9773,B,debt_consolidation,MORTGAGE,Verified,38516.0,11.99,Current,T1_DECLINE,prime+verified
+4989,B,other,RENT,Verified,38516.0,11.99,Late (31-120 days),T1_DECLINE,prime+verified
+8941,B,debt_consolidation,OWN,Verified,38515.0,11.98,Current,T1_DECLINE,prime+verified + owns outright
+557,B,debt_consolidation,MORTGAGE,Verified,38515.0,11.98,Current,T1_DECLINE,prime+verified
+222,B,home_improvement,MORTGAGE,Verified,38473.0,10.9,Current,T1_DECLINE,prime+verified
+5600,B,debt_consolidation,MORTGAGE,Verified,38454.0,10.42,Current,T1_DECLINE,prime+verified
+9541,B,home_improvement,MORTGAGE,Verified,38454.0,10.42,Current,T1_DECLINE,prime+verified
+653,B,home_improvement,MORTGAGE,Verified,38435.0,9.93,Current,T1_DECLINE,prime+verified
+1750,B,debt_consolidation,MORTGAGE,Verified,38435.0,9.93,Current,T1_DECLINE,prime+verified
+3463,B,other,RENT,Verified,38434.0,9.92,Current,T1_DECLINE,prime+verified
+3334,B,debt_consolidation,MORTGAGE,Verified,38434.0,9.92,Current,T1_DECLINE,prime+verified
+9666,B,other,MORTGAGE,Verified,38434.0,9.92,Current,T1_DECLINE,prime+verified
+3857,B,other,MORTGAGE,Verified,38434.0,9.92,Current,T1_DECLINE,prime+verified
+3844,B,debt_consolidation,MORTGAGE,Verified,38414.0,9.43,Current,T1_DECLINE,prime+verified
+7488,B,small_business,MORTGAGE,Verified,38414.0,9.43,Current,T1_DECLINE,prime+verified
+7764,B,major_purchase,MORTGAGE,Verified,38414.0,9.43,Current,T1_DECLINE,prime+verified + purpose:elevated
+4599,A,debt_consolidation,MORTGAGE,Verified,38329.0,7.35,Late (16-30 days),T1_DECLINE,prime+verified

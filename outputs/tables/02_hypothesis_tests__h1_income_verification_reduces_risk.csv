@@ -1,0 +1,5 @@
+band,verification,loans,impaired,impaired_rate_pct,ci_low,ci_high,avg_coupon_pct,risk_multiple,balance_musd
+Prime (A-B),Not / source verified,4601,33.0,0.72,0.51,1.01,8.77,1.0,60.3
+Prime (A-B),Verified,895,19.0,2.12,1.36,3.29,9.16,2.96,16.4
+Non-prime (C-G),Not / source verified,3109,87.0,2.8,2.27,3.44,16.42,1.0,44.8
+Non-prime (C-G),Verified,1395,39.0,2.8,2.05,3.8,17.69,1.0,23.1

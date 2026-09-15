@@ -1,0 +1,7 @@
+loan_status,loans,pct_of_loans,balance_musd,pct_of_balance,avg_coupon_pct,roll_to_charge_off,ew_loss_kusd
+Charged Off,7,0.07,0.0,0.0,12.38,1.0,0.0
+Late (31-120 days),66,0.66,1.21,0.84,16.53,0.7,723.0
+Late (16-30 days),38,0.38,0.61,0.42,16.85,0.45,232.0
+In Grace Period,67,0.67,1.18,0.81,15.64,0.3,300.0
+Current,9375,93.75,141.59,97.93,12.31,0.0,0.0
+Fully Paid,447,4.47,0.0,0.0,13.41,0.0,0.0

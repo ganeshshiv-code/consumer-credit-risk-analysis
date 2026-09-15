@@ -1,0 +1,5 @@
+roll_scenario,grace_roll,late_31_120_roll,CORE_net_yield_pct,T2_REPRICE_net_yield_pct,T1_DECLINE_net_yield_pct,ranking_preserved
+optimistic,0.15,0.55,6.17,2.4,-0.21,True
+base,0.3,0.7,6.16,2.51,-0.18,True
+severe,0.45,0.85,6.15,2.56,-0.16,True
+very severe,0.6,0.95,6.14,2.63,-0.16,True

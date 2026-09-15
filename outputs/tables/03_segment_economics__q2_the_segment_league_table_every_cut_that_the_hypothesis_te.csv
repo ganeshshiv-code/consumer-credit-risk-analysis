@@ -1,0 +1,12 @@
+segment,loans,balance_musd,impaired_rate_pct,coupon_pct,annual_loss_pct,net_yield_pct,vs_portfolio_bps,verdict
+PORTFOLIO,10000,144.59,1.78,12.66,3.85,4.81,0.0,ACCRETIVE
+Grade A - income Verified,352,6.3,2.56,6.72,6.24,-3.52,-832.0,VALUE DESTROYING
+Grade A - not/source verified,2107,26.64,0.47,6.69,0.63,2.05,-275.0,BELOW PORTFOLIO
+Grade B - income Verified,543,10.1,1.84,10.65,3.55,3.1,-171.0,BELOW PORTFOLIO
+Purpose: house,151,2.34,6.62,11.53,14.79,-7.26,-1207.0,VALUE DESTROYING
+Purpose: elevated set,816,9.7,3.8,12.3,10.94,-2.64,-744.0,VALUE DESTROYING
+Purpose: credit_card,2249,31.14,1.07,11.72,2.37,5.35,54.0,ACCRETIVE
+Purpose: debt_consolidation,5144,80.5,1.71,13.14,3.39,5.74,93.0,ACCRETIVE
+Homeowner: OWN outright,1353,18.56,2.51,12.63,5.6,3.03,-178.0,BELOW PORTFOLIO
+Homeowner: MORTGAGE,4789,76.77,1.42,12.28,2.96,5.32,51.0,ACCRETIVE
+Joint application,1495,26.67,2.47,13.27,3.55,5.72,91.0,ACCRETIVE

@@ -1,0 +1,10 @@
+# DuckDB is rebuilt by python/01_build_db.py — keep the raw CSV, not the database
+data/*.duckdb
+data/*.duckdb.wal
+
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.venv/
+venv/
+.DS_Store

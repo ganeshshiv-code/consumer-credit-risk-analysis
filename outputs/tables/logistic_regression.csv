@@ -1,0 +1,16 @@
+,coefficient,odds_ratio,p_value,verdict
+Intercept,-4.953,0.01,0.0,SIGNIFICANT
+C(grade)[T.B],0.39,1.48,0.1838,not significant
+C(grade)[T.C],1.012,2.75,0.0003,SIGNIFICANT
+C(grade)[T.D],1.55,4.71,0.0,SIGNIFICANT
+C(grade)[T.E],1.958,7.08,0.0,SIGNIFICANT
+C(grade)[T.F],2.924,18.62,0.0,SIGNIFICANT
+C(grade)[T.G],2.438,11.44,0.0272,SIGNIFICANT
+verified[T.Verified],0.257,1.29,0.1332,not significant
+term60,-0.106,0.9,0.5332,not significant
+joint_flag,0.488,1.63,0.0184,SIGNIFICANT
+elevated_purpose_flag,0.873,2.39,0.0,SIGNIFICANT
+outright_owner_flag,0.436,1.55,0.0266,SIGNIFICANT
+payment_to_income,0.873,2.39,0.3448,not significant
+debt_to_income,-0.023,0.98,0.0019,SIGNIFICANT
+inquiries_last_12m,0.046,1.05,0.0832,not significant

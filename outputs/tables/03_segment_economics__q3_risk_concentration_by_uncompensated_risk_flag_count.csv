@@ -1,0 +1,4 @@
+risk_flags,loans,pct_of_loans,pct_of_balance,impaired_rate_pct,avg_coupon_pct,pct_of_modelled_loss,loss_concentration_index
+0 flags,7254,72.5,72.4,1.48,12.79,55.9,0.77
+1 flag,2446,24.5,24.6,2.41,11.64,37.0,1.51
+2+ flags,300,3.0,3.1,4.0,10.04,7.1,2.31

@@ -1,0 +1,4 @@
+decision_tier,loans,pct_of_loans,balance_musd,pct_of_balance,impaired_rate_pct,coupon_pct,annual_loss_pct,net_yield_pct,pct_of_total_loss
+CORE,7254,72.5,104.63,72.4,1.48,13.13,2.98,6.16,55.9
+T1_DECLINE,1026,10.3,18.34,12.7,2.63,9.43,5.61,-0.18,18.5
+T2_REPRICE,1720,17.2,21.61,14.9,2.56,13.12,6.61,2.51,25.6

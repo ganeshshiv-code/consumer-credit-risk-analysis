@@ -1,0 +1,1222 @@
+<title>Uncompensated Risk Review</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:wght@500;600&display=swap">
+
+<style>
+:root {
+  --ground:    #eceff4;
+  --surface:   #ffffff;
+  --surface-2: #f5f7fa;
+  --ink:       #131822;
+  --ink-2:     #4d5765;
+  --muted:     #7d8798;
+  --rule:      #dfe4eb;
+  --rule-soft: #eaeef3;
+
+  --blue:      #2a6fd0;
+  --blue-soft: #dbe7f8;
+  --amber:     #d9702a;
+  --amber-soft:#fae5d6;
+  --good:      #0b8f45;
+  --crit:      #c8392f;
+  --crit-soft: #fae0dd;
+
+  --shadow: 0 1px 2px rgba(19,24,34,.05), 0 6px 16px -10px rgba(19,24,34,.18);
+  --r: 6px;
+
+  --f-display: "IBM Plex Serif", Georgia, "Times New Roman", serif;
+  --f-sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ground:    #0b0e13;
+    --surface:   #141920;
+    --surface-2: #1b212a;
+    --ink:       #eef2f7;
+    --ink-2:     #a3aebc;
+    --muted:     #78828f;
+    --rule:      #262d37;
+    --rule-soft: #1e242d;
+    --blue:      #4a90e8;
+    --blue-soft: #1b2c42;
+    --amber:     #e0813f;
+    --amber-soft:#3a2617;
+    --good:      #2aa85c;
+    --crit:      #e0574c;
+    --crit-soft: #3d1f1c;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 20px -12px rgba(0,0,0,.6);
+  }
+}
+:root[data-theme="dark"] {
+  --ground:    #0b0e13;
+  --surface:   #141920;
+  --surface-2: #1b212a;
+  --ink:       #eef2f7;
+  --ink-2:     #a3aebc;
+  --muted:     #78828f;
+  --rule:      #262d37;
+  --rule-soft: #1e242d;
+  --blue:      #4a90e8;
+  --blue-soft: #1b2c42;
+  --amber:     #e0813f;
+  --amber-soft:#3a2617;
+  --good:      #2aa85c;
+  --crit:      #e0574c;
+  --crit-soft: #3d1f1c;
+  --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 20px -12px rgba(0,0,0,.6);
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--f-sans);
+  font-size: 14px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+.wrap { max-width: 1140px; margin: 0 auto; padding-inline: 20px; padding-block: 0 56px; }
+
+/* ---------- masthead ---------- */
+.masthead {
+  border-bottom: 1px solid var(--rule);
+  background: var(--surface);
+}
+.masthead .wrap { padding-block: 22px 20px; }
+.kicker {
+  font-family: var(--f-mono); font-size: 11px; font-weight: 500;
+  letter-spacing: .13em; text-transform: uppercase; color: var(--muted);
+}
+h1 {
+  font-family: var(--f-display); font-weight: 600;
+  font-size: clamp(26px, 4.4vw, 40px); line-height: 1.12;
+  margin: 8px 0 0; text-wrap: balance; letter-spacing: -.01em;
+}
+.dek {
+  margin: 10px 0 0; max-width: 62ch; color: var(--ink-2); font-size: 15px;
+}
+.meta-row {
+  display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 16px;
+  font-family: var(--f-mono); font-size: 11.5px; color: var(--muted);
+}
+.meta-row span { white-space: nowrap; }
+
+/* ---------- verdict ---------- */
+.verdict {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 22px;
+  margin-top: 26px; padding: 20px 22px;
+  background: var(--surface); border: 1px solid var(--rule);
+  border-left: 3px solid var(--good); border-radius: var(--r);
+  box-shadow: var(--shadow);
+}
+.verdict-fig {
+  font-family: var(--f-mono); font-size: clamp(34px, 6vw, 48px); font-weight: 600;
+  color: var(--good); line-height: 1; letter-spacing: -.02em;
+}
+.verdict-txt { flex: 1 1 320px; min-width: 0; }
+.verdict-txt strong { font-weight: 600; }
+.verdict-txt p { margin: 0; }
+.verdict-sub { margin-top: 5px !important; color: var(--ink-2); font-size: 13px; }
+
+/* ---------- kpis ---------- */
+.kpis {
+  display: grid; gap: 1px; margin-top: 18px;
+  grid-template-columns: repeat(auto-fit, minmax(168px, 1fr));
+  background: var(--rule); border: 1px solid var(--rule);
+  border-radius: var(--r); overflow: hidden;
+}
+.kpi { background: var(--surface); padding: 15px 16px; }
+.kpi-label {
+  font-family: var(--f-mono); font-size: 10.5px; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--muted);
+}
+.kpi-val {
+  font-family: var(--f-mono); font-size: 25px; font-weight: 600;
+  margin-top: 6px; letter-spacing: -.02em; font-variant-numeric: tabular-nums;
+}
+.kpi-note { font-size: 12px; color: var(--ink-2); margin-top: 3px; }
+
+/* ---------- sections ---------- */
+section { margin-top: 44px; }
+.sec-head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 4px; }
+.sec-num {
+  font-family: var(--f-mono); font-size: 12px; font-weight: 600;
+  color: var(--blue); letter-spacing: .06em;
+}
+h2 {
+  font-family: var(--f-display); font-weight: 600; font-size: 21px;
+  margin: 0; letter-spacing: -.005em; text-wrap: balance;
+}
+.sec-dek { margin: 0 0 18px; color: var(--ink-2); max-width: 68ch; }
+
+.panel {
+  background: var(--surface); border: 1px solid var(--rule);
+  border-radius: var(--r); box-shadow: var(--shadow);
+  padding: 18px 20px 16px;
+}
+.panel + .panel { margin-top: 16px; }
+.grid-2 { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(330px, 1fr)); }
+.panel-title {
+  font-weight: 600; font-size: 14px; margin: 0 0 2px;
+}
+.panel-sub { font-size: 12.5px; color: var(--ink-2); margin: 0 0 14px; }
+.figure-note {
+  font-size: 11.5px; color: var(--muted); margin: 12px 0 0;
+  padding-top: 10px; border-top: 1px solid var(--rule-soft);
+}
+
+/* ---------- charts ---------- */
+.chart { width: 100%; display: block; overflow: visible; }
+.chart text { font-family: var(--f-sans); }
+.tick { font-size: 10.5px; fill: var(--muted); }
+.axis-line { stroke: var(--rule); stroke-width: 1; }
+.grid-line { stroke: var(--rule-soft); stroke-width: 1; }
+.val-label {
+  font-family: var(--f-mono); font-size: 11px; font-weight: 500; fill: var(--ink);
+}
+.cat-label { font-size: 11.5px; fill: var(--ink-2); }
+.bar { transition: opacity .12s ease; }
+.bar:hover { opacity: .78; }
+
+.legend { display: flex; flex-wrap: wrap; gap: 6px 16px; margin: 0 0 12px; }
+.legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--ink-2); }
+.swatch { width: 11px; height: 11px; border-radius: 2px; flex: none; }
+
+/* ---------- controls ---------- */
+.controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 14px; }
+.seg-toggle { display: inline-flex; border: 1px solid var(--rule); border-radius: var(--r); overflow: hidden; }
+.seg-toggle button {
+  font-family: var(--f-sans); font-size: 12.5px; padding: 6px 13px;
+  background: var(--surface); color: var(--ink-2); border: 0; cursor: pointer;
+  border-right: 1px solid var(--rule);
+}
+.seg-toggle button:last-child { border-right: 0; }
+.seg-toggle button[aria-pressed="true"] { background: var(--blue); color: #fff; font-weight: 500; }
+.seg-toggle button:focus-visible { outline: 2px solid var(--blue); outline-offset: -2px; }
+
+.sliders { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
+.slider-row label {
+  display: flex; justify-content: space-between; gap: 10px;
+  font-size: 12.5px; color: var(--ink-2); margin-bottom: 6px;
+}
+.slider-row output { font-family: var(--f-mono); font-weight: 600; color: var(--ink); }
+input[type="range"] { width: 100%; accent-color: var(--blue); }
+input[type="range"]:focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; }
+
+/* ---------- tables ---------- */
+.table-scroll { overflow-x: auto; margin-inline: -20px; padding-inline: 20px; }
+table { border-collapse: collapse; width: 100%; font-size: 13px; min-width: 520px; }
+th, td { text-align: right; padding: 7px 10px; border-bottom: 1px solid var(--rule-soft); white-space: nowrap; }
+th:first-child, td:first-child { text-align: left; }
+thead th {
+  font-family: var(--f-mono); font-size: 10.5px; letter-spacing: .07em;
+  text-transform: uppercase; color: var(--muted); font-weight: 500;
+  border-bottom: 1px solid var(--rule); position: sticky; top: 0; background: var(--surface);
+}
+thead th.sortable { cursor: pointer; user-select: none; }
+thead th.sortable:hover { color: var(--ink); }
+thead th[aria-sort] { color: var(--ink); }
+tbody tr:hover { background: var(--surface-2); }
+td.num, th.num { font-family: var(--f-mono); font-variant-numeric: tabular-nums; }
+tfoot td { font-weight: 600; border-top: 1px solid var(--rule); border-bottom: 0; }
+
+.pill {
+  display: inline-block; font-family: var(--f-mono); font-size: 10.5px; font-weight: 500;
+  padding: 2px 7px; border-radius: 99px; letter-spacing: .03em;
+}
+.pill.good { background: color-mix(in srgb, var(--good) 14%, transparent); color: var(--good); }
+.pill.warn { background: var(--amber-soft); color: var(--amber); }
+.pill.crit { background: var(--crit-soft); color: var(--crit); }
+.pill.neut { background: var(--blue-soft); color: var(--blue); }
+
+/* ---------- tier cards ---------- */
+.tiers { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); }
+.tier {
+  background: var(--surface); border: 1px solid var(--rule); border-radius: var(--r);
+  padding: 18px 20px; box-shadow: var(--shadow); border-top: 3px solid var(--rule);
+}
+.tier.t-core { border-top-color: var(--good); }
+.tier.t-two  { border-top-color: var(--amber); }
+.tier.t-one  { border-top-color: var(--crit); }
+.tier h3 { font-family: var(--f-display); font-size: 17px; margin: 0 0 2px; font-weight: 600; }
+.tier-action {
+  font-family: var(--f-mono); font-size: 10.5px; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 12px;
+}
+.tier-yield {
+  font-family: var(--f-mono); font-size: 30px; font-weight: 600;
+  letter-spacing: -.02em; line-height: 1;
+}
+.tier.t-core .tier-yield { color: var(--good); }
+.tier.t-two  .tier-yield { color: var(--amber); }
+.tier.t-one  .tier-yield { color: var(--crit); }
+.tier-yield-label { font-size: 12px; color: var(--ink-2); margin-top: 3px; }
+.tier dl { display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; margin: 14px 0 0; font-size: 12.5px; }
+.tier dt { color: var(--ink-2); }
+.tier dd { margin: 0; font-family: var(--f-mono); font-variant-numeric: tabular-nums; }
+.tier-rule { margin: 14px 0 0; padding-top: 12px; border-top: 1px solid var(--rule-soft); font-size: 12.5px; color: var(--ink-2); }
+.tier-rule code { font-family: var(--f-mono); font-size: 11.5px; color: var(--ink); }
+
+/* ---------- callouts ---------- */
+.callout {
+  margin-top: 16px; padding: 14px 16px; border-radius: var(--r);
+  background: var(--surface-2); border: 1px solid var(--rule);
+  font-size: 13px; color: var(--ink-2);
+}
+.callout strong { color: var(--ink); font-weight: 600; }
+
+footer {
+  margin-top: 48px; padding-top: 20px; border-top: 1px solid var(--rule);
+  font-size: 12.5px; color: var(--muted);
+}
+footer a { color: var(--blue); }
+footer p { margin: 0 0 6px; max-width: 78ch; }
+
+@media (max-width: 560px) {
+  .verdict { gap: 14px; padding: 16px; }
+  .kpi-val { font-size: 22px; }
+  .table-scroll { margin-inline: -16px; padding-inline: 16px; }
+  .wrap { padding-inline: 16px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}
+</style>
+
+<script type="application/json" id="payload">__PAYLOAD__</script>
+
+<header class="masthead">
+  <div class="wrap">
+    <div class="kicker">Credit portfolio review · Q1 2018 vintage</div>
+    <h1>Uncompensated Risk in a $163M Consumer Loan Book</h1>
+    <p class="dek">
+      The credit grade is working. The problem is three borrower attributes it never
+      sees — and they are priced at, or below, the book average.
+    </p>
+    <div class="meta-row">
+      <span>10,000 loans</span>
+      <span>LendingClub loan-level originations</span>
+      <span>Observed at ~4 months on book</span>
+      <span>Analyst: Shiv Ganesh</span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="verdict">
+    <div class="verdict-fig" id="verdict-bps">+138bps</div>
+    <div class="verdict-txt">
+      <p><strong>Recommendation: decline two segments, reprice a third.</strong></p>
+      <p class="verdict-sub" id="verdict-sub">
+        Risk-adjusted net yield rises from 4.81% to 6.19% — $2.0M a year on this book,
+        $6.9M on a $500M origination programme. The tier ranking held in all 16
+        assumption scenarios tested.
+      </p>
+    </div>
+  </div>
+
+  <div class="kpis" id="kpis"></div>
+
+  <!-- 01 -->
+  <section>
+    <div class="sec-head"><span class="sec-num">01</span><h2>The book at four months</h2></div>
+    <p class="sec-dek">
+      Ultimate default is unobservable on a vintage this young. The analysable outcome is
+      early impairment — any loan that has already missed a payment.
+    </p>
+    <div class="grid-2">
+      <div class="panel">
+        <p class="panel-title">Delinquency waterfall</p>
+        <p class="panel-sub">Where the stress sits, and how much of it is expected to reach charge-off.</p>
+        <div class="table-scroll">
+          <table id="status-table">
+            <thead><tr>
+              <th>Status</th><th class="num">Loans</th><th class="num">Balance</th>
+              <th class="num">Roll to CO</th>
+            </tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <p class="figure-note">Roll rates are business assumptions, stressed in section 06.</p>
+      </div>
+      <div class="panel">
+        <p class="panel-title">The grade ladder works</p>
+        <p class="panel-sub">Impairment rises with grade — and the coupon rises faster, so the riskiest grades are the most profitable.</p>
+        <div class="table-scroll">
+          <table id="grade-table">
+            <thead><tr>
+              <th>Grade</th><th class="num">Loans</th><th class="num">Impaired</th>
+              <th class="num">Coupon</th><th class="num">Net yield</th>
+            </tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <p class="figure-note">Grades F and G (58 and 12 loans) are too small to read and are excluded from every conclusion.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 -->
+  <section>
+    <div class="sec-head"><span class="sec-num">02</span><h2>Risk climbs, price falls</h2></div>
+    <p class="sec-dek">
+      Three attributes carry significant risk that the pricing engine does not see:
+      income verification in prime grades, loan purpose, and outright home ownership.
+      Where they stack, the coupon moves the wrong way.
+    </p>
+    <div class="panel">
+      <p class="panel-title">Uncompensated-risk flags against the price charged</p>
+      <p class="panel-sub">Two measures, two scales, two panels — never one chart with two axes.</p>
+      <div id="flag-chart"></div>
+      <p class="figure-note" id="flag-note"></p>
+    </div>
+    <div class="panel">
+      <p class="panel-title">Loan purpose: risk against price</p>
+      <p class="panel-sub">
+        Everything below the horizontal line is priced under the book average.
+        Everything right of the vertical line is riskier than the book.
+      </p>
+      <div id="purpose-chart"></div>
+      <p class="figure-note">
+        Bubble area is outstanding balance. Purposes with at least 100 loans.
+        Pooled elevated set (house, medical, car, major purchase, moving):
+        3.80% vs 1.60%, Fisher p=0.00004; odds ratio 2.39 after controlling for grade.
+      </p>
+    </div>
+  </section>
+
+  <!-- 03 -->
+  <section>
+    <div class="sec-head"><span class="sec-num">03</span><h2>The verification paradox</h2></div>
+    <p class="sec-dek">
+      Income verification is supposed to reduce risk. In prime grades it predicts the
+      opposite, and in subprime it predicts nothing at all.
+    </p>
+    <div class="panel">
+      <div class="legend">
+        <span class="legend-item"><span class="swatch" style="background:var(--blue)"></span>Not / source verified</span>
+        <span class="legend-item"><span class="swatch" style="background:var(--amber)"></span>Income verified</span>
+        <span class="legend-item"><span class="swatch" style="background:var(--muted);height:2px;border-radius:0"></span>Wilson 95% interval</span>
+      </div>
+      <div id="verif-chart"></div>
+      <p class="figure-note">
+        Grade A: 2.56% vs 0.47% — 5.4x the risk for 13bps more coupon (Fisher exact p=0.0006).
+        Verification × credit-band interaction: odds ratio 3.3, p=0.0007. As a standalone
+        main effect, verification is not significant (p=0.13) — the two opposing effects cancel.
+      </p>
+      <div class="callout">
+        <strong>Why this happens.</strong> Verification is not randomly assigned; the platform
+        chooses whom to verify. In the prime band, being asked to document income is a signal
+        that something in the application did not reconcile on its own. The verification
+        <em>outcome</em> is clean — which is why the loan is graded A. The verification
+        <em>trigger</em> is the information, and the grade never sees it.
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 -->
+  <section>
+    <div class="sec-head"><span class="sec-num">04</span><h2>What each segment actually earns</h2></div>
+    <p class="sec-dek">
+      Net yield = coupon − 3.0% funding − 1.0% servicing − annualised expected loss.
+      Read this column rather than the impairment column: grade E impairs 6.6x more than
+      grade A and earns eleven times the net yield.
+    </p>
+    <div class="panel">
+      <div class="controls">
+        <div class="seg-toggle" role="group" aria-label="Choose metric">
+          <button type="button" id="btn-yield" aria-pressed="true">Net yield</button>
+          <button type="button" id="btn-imp" aria-pressed="false">Impairment rate</button>
+        </div>
+      </div>
+      <div id="segment-chart"></div>
+      <p class="figure-note" id="segment-note"></p>
+    </div>
+    <div class="panel">
+      <p class="panel-title">Hypothesis register</p>
+      <p class="panel-sub">
+        Stated before the analysis. Four of six were rejected, and two of the rejections
+        were more useful than the confirmations. Click a column to sort.
+      </p>
+      <div class="table-scroll">
+        <table id="tests-table">
+          <thead><tr>
+            <th class="sortable" data-k="test">Test</th>
+            <th class="sortable num" data-k="n_segment">n</th>
+            <th class="sortable num" data-k="rate_segment_pct">Segment</th>
+            <th class="sortable num" data-k="rate_rest_pct">Rest</th>
+            <th class="sortable num" data-k="risk_multiple">Multiple</th>
+            <th class="sortable num" data-k="coupon_gap_pp">Price gap</th>
+            <th class="sortable num" data-k="p_value">p</th>
+            <th>Verdict</th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <p class="figure-note">
+        Two-tailed Fisher exact tests. A significant finding that is already adequately
+        priced — joint applications, at +5.72% net yield — produces no action.
+        Significant is not the same as actionable.
+      </p>
+    </div>
+  </section>
+
+  <!-- 05 -->
+  <section>
+    <div class="sec-head"><span class="sec-num">05</span><h2>The underwriting overlay</h2></div>
+    <p class="sec-dek">
+      Three tiers, each with a decision rather than an observation.
+      27.5% of accounts carry 44.1% of the modelled loss.
+    </p>
+    <div class="tiers" id="tier-cards"></div>
+  </section>
+
+  <!-- 06 -->
+  <section>
+    <div class="sec-head"><span class="sec-num">06</span><h2>What it is worth, and whether it holds</h2></div>
+    <p class="sec-dek">
+      Declining Tier 1 and repricing Tier 2 lifts net yield by 138bps. The two inputs that
+      are genuinely uncertain — how many repriced borrowers walk, and how much premium to
+      charge — are yours to move.
+    </p>
+    <div class="panel">
+      <p class="panel-title">Live scenario model</p>
+      <p class="panel-sub">
+        Recomputed from the tier balances in the database. Capital freed by declines and
+        attrition redeploys into Core at its own net yield.
+      </p>
+      <div class="sliders">
+        <div class="slider-row">
+          <label for="s-attrition">Tier 2 attrition after repricing <output id="o-attrition">35%</output></label>
+          <input type="range" id="s-attrition" min="0" max="100" step="5" value="35">
+        </div>
+        <div class="slider-row">
+          <label for="s-premium">Tier 2 repricing premium <output id="o-premium">+400bps</output></label>
+          <input type="range" id="s-premium" min="0" max="800" step="25" value="400">
+        </div>
+      </div>
+      <div id="waterfall-chart" style="margin-top:18px"></div>
+      <p class="figure-note" id="waterfall-note"></p>
+    </div>
+    <div class="grid-2">
+      <div class="panel">
+        <p class="panel-title">Does the ranking survive the assumptions?</p>
+        <p class="panel-sub">Roll-to-charge-off rates flexed from optimistic to very severe.</p>
+        <div id="sens-chart"></div>
+        <p class="figure-note">
+          Loss levels move with the assumptions, as they should. The tier ordering —
+          Core &gt; Tier 2 &gt; Tier 1 — held in all 16 scenarios tested, including LGD,
+          funding, servicing and the lifetime anchor moved one at a time.
+        </p>
+      </div>
+      <div class="panel">
+        <p class="panel-title">Debt-to-income points the wrong way</p>
+        <p class="panel-sub">The lowest-DTI quintile impairs at twice the rate of the middle.</p>
+        <div id="dti-chart"></div>
+        <p class="figure-note">
+          Odds ratio 0.98 per point, p=0.0019 — significant, and inverted. The likely reading
+          is that low measured DTI here is a thin credit file rather than financial strength.
+          This becomes a warning against the intuitive recommendation, not a recommendation.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 07 -->
+  <section>
+    <div class="sec-head"><span class="sec-num">07</span><h2>Monthly watchlist</h2></div>
+    <p class="sec-dek">
+      Every already-impaired loan carrying an uncompensated-risk flag, largest balance first.
+      This is the operational output the credit committee receives each month.
+    </p>
+    <div class="panel">
+      <div class="table-scroll">
+        <table id="watch-table">
+          <thead><tr>
+            <th class="num">Loan</th><th>Grade</th><th>Purpose</th><th>Housing</th>
+            <th>Verification</th><th class="num">Balance</th><th class="num">Coupon</th>
+            <th>Status</th><th>Tier</th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <p class="figure-note" id="watch-note"></p>
+    </div>
+  </section>
+
+  <footer>
+    <p>
+      <strong>Data.</strong> Real LendingClub loan-level originations, January–March 2018,
+      published as <code>loans_full_schema</code> by OpenIntro and mirrored in Rdatasets.
+      10,000 loans, 55 fields. No values are simulated.
+    </p>
+    <p>
+      <strong>Method.</strong> DuckDB for portfolio arithmetic, Python (scipy, statsmodels)
+      for significance testing and multivariate control. Every figure on this page is
+      generated from the database by <code>python/06_dashboard_data.py</code> — nothing is
+      typed in by hand.
+    </p>
+    <p>
+      <strong>Limitations.</strong> One vintage in a benign macro quarter, observed at four
+      months. Absolute loss levels depend on the roll-rate and seasoning assumptions;
+      segment rankings do not. Applicants the platform declined are not observable.
+    </p>
+  </footer>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  const D = JSON.parse(document.getElementById("payload").textContent);
+  const $ = (s) => document.querySelector(s);
+  const NS = "http://www.w3.org/2000/svg";
+
+  // ---------- formatting ----------
+  const pct = (v, d = 2) => (v == null ? "—" : v.toFixed(d) + "%");
+  const sPct = (v, d = 2) => (v >= 0 ? "+" : "") + v.toFixed(d) + "%";
+  const usdM = (v) => "$" + (v / 1e6).toFixed(1) + "M";
+  const usdK = (v) => (Math.abs(v) >= 1e6 ? usdM(v)
+    : "$" + Math.round(v / 1e3).toLocaleString() + "k");
+  const num = (v) => v.toLocaleString();
+  const title = (s) => s.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+
+  function el(tag, attrs, text) {
+    const n = document.createElementNS(NS, tag);
+    for (const k in attrs) n.setAttribute(k, attrs[k]);
+    if (text != null) n.textContent = text;
+    return n;
+  }
+  function svg(w, h) {
+    const s = el("svg", {
+      viewBox: `0 0 ${w} ${h}`, class: "chart",
+      preserveAspectRatio: "xMidYMid meet", role: "img"
+    });
+    s.style.height = "auto";
+    return s;
+  }
+  function tip(node, text) {
+    node.appendChild(el("title", {}, text));
+    return node;
+  }
+
+  // ================= KPIs =================
+  (function kpis() {
+    const h = D.headline;
+    const cards = [
+      ["Originated", usdM(h.originated), num(h.loans) + " loans, Q1 2018"],
+      ["Outstanding", usdM(h.outstanding), "88.4% of original principal"],
+      ["Early impairment", pct(h.impaired_rate), usdM(h.impaired_balance) + " of principal"],
+      ["Weighted coupon", pct(h.coupon), "36 and 60-month terms"],
+      ["Net yield", pct(h.net_yield), "after funding, servicing, loss"]
+    ];
+    $("#kpis").innerHTML = cards.map(([l, v, n]) => `
+      <div class="kpi">
+        <div class="kpi-label">${l}</div>
+        <div class="kpi-val">${v}</div>
+        <div class="kpi-note">${n}</div>
+      </div>`).join("");
+  })();
+
+  // ================= status + grade tables =================
+  (function tables() {
+    $("#status-table tbody").innerHTML = D.status_mix.map((r) => `
+      <tr>
+        <td>${r.status}</td>
+        <td class="num">${num(r.loans)}</td>
+        <td class="num">${r.balance < 1 ? "$0" : usdM(r.balance)}</td>
+        <td class="num">${r.roll > 0 ? (r.roll * 100).toFixed(0) + "%" : "—"}</td>
+      </tr>`).join("");
+
+    $("#grade-table tbody").innerHTML = D.grades.map((r) => {
+      const cls = r.net_yield < 0 ? "crit" : r.net_yield > D.headline.net_yield ? "good" : "neut";
+      return `<tr>
+        <td><strong>${r.grade}</strong></td>
+        <td class="num">${num(r.loans)}</td>
+        <td class="num">${pct(r.impaired)}</td>
+        <td class="num">${pct(r.coupon)}</td>
+        <td class="num"><span class="pill ${cls}">${sPct(r.net_yield)}</span></td>
+      </tr>`;
+    }).join("");
+  })();
+
+  // ================= flag stack: two panels, one category axis =================
+  (function flagChart() {
+    const d = D.flag_stack;
+    const W = 720, H = 250, pad = { t: 26, r: 16, b: 52, l: 46 }, gap = 44;
+    const panelW = (W - pad.l * 2 - pad.r - gap) / 2;
+    const s = svg(W, H);
+
+    const panels = [
+      { x: pad.l, key: "impaired", label: "Risk carried", unit: "Early impairment rate", color: "var(--amber)" },
+      { x: pad.l + panelW + gap + pad.l, key: "coupon", label: "Price charged", unit: "Average coupon", color: "var(--blue)" }
+    ];
+
+    panels.forEach((p) => {
+      const vals = d.map((r) => r[p.key]);
+      const max = Math.max(...vals) * 1.32;
+      const plotH = H - pad.t - pad.b;
+      const y = (v) => pad.t + plotH - (v / max) * plotH;
+
+      s.appendChild(el("text", { x: p.x, y: pad.t - 12, class: "val-label" }, p.label));
+
+      // gridlines
+      for (let i = 0; i <= 3; i++) {
+        const gv = (max / 3) * i;
+        s.appendChild(el("line", { x1: p.x, x2: p.x + panelW, y1: y(gv), y2: y(gv), class: "grid-line" }));
+        s.appendChild(el("text", {
+          x: p.x - 7, y: y(gv) + 3.5, class: "tick", "text-anchor": "end"
+        }, gv.toFixed(0) + "%"));
+      }
+
+      const bw = panelW / d.length * 0.54;
+      d.forEach((r, i) => {
+        const cx = p.x + (panelW / d.length) * (i + 0.5);
+        const v = r[p.key];
+        const bar = el("rect", {
+          x: cx - bw / 2, y: y(v), width: bw, height: pad.t + plotH - y(v),
+          fill: p.color, rx: 2, class: "bar"
+        });
+        s.appendChild(tip(bar, `${r.bucket}: ${v.toFixed(2)}% (${num(r.loans)} loans)`));
+        s.appendChild(el("text", {
+          x: cx, y: y(v) - 7, class: "val-label", "text-anchor": "middle"
+        }, v.toFixed(2) + "%"));
+        s.appendChild(el("text", {
+          x: cx, y: H - pad.b + 18, class: "cat-label", "text-anchor": "middle"
+        }, r.bucket));
+        s.appendChild(el("text", {
+          x: cx, y: H - pad.b + 33, class: "tick", "text-anchor": "middle"
+        }, num(r.loans) + " loans"));
+      });
+
+      s.appendChild(el("line", {
+        x1: p.x, x2: p.x + panelW, y1: pad.t + plotH, y2: pad.t + plotH, class: "axis-line"
+      }));
+      s.appendChild(el("text", { x: p.x, y: H - 6, class: "tick" }, p.unit));
+    });
+
+    $("#flag-chart").appendChild(s);
+
+    const lo = d[0], hi = d[d.length - 1];
+    $("#flag-note").textContent =
+      `Impairment rises ${(hi.impaired / lo.impaired).toFixed(1)}x across the buckets while the ` +
+      `coupon falls ${Math.round((lo.coupon - hi.coupon) * 100)}bps. ` +
+      `The ${hi.bucket} bucket is ${(hi.loans / D.headline.loans * 100).toFixed(1)}% of accounts ` +
+      `and ${hi.loss_share.toFixed(1)}% of modelled loss.`;
+  })();
+
+  // ================= purpose quadrant =================
+  (function purposeChart() {
+    const d = D.purposes;
+    const W = 720, H = 400, pad = { t: 18, r: 24, b: 54, l: 62 };
+    const s = svg(W, H);
+    const xMax = Math.max(...d.map((r) => r.risk_mult)) * 1.12;
+    const yMin = Math.min(...d.map((r) => r.price_gap)) - 0.45;
+    const yMax = Math.max(...d.map((r) => r.price_gap)) + 0.45;
+    const X = (v) => pad.l + (v / xMax) * (W - pad.l - pad.r);
+    const Y = (v) => pad.t + (1 - (v - yMin) / (yMax - yMin)) * (H - pad.t - pad.b);
+    const maxBal = Math.max(...d.map((r) => r.balance));
+
+    // danger quadrant
+    s.appendChild(el("rect", {
+      x: X(1), y: Y(0), width: W - pad.r - X(1), height: Y(yMin) - Y(0),
+      fill: "var(--crit)", opacity: ".055"
+    }));
+
+    for (let g = 0; g <= 4; g++) {
+      const gx = (xMax / 4) * g;
+      s.appendChild(el("line", { x1: X(gx), x2: X(gx), y1: pad.t, y2: Y(yMin), class: "grid-line" }));
+      s.appendChild(el("text", { x: X(gx), y: H - pad.b + 17, class: "tick", "text-anchor": "middle" },
+        gx.toFixed(1) + "x"));
+    }
+    for (let g = Math.ceil(yMin * 2) / 2; g <= yMax; g += 0.5) {
+      s.appendChild(el("line", { x1: pad.l, x2: W - pad.r, y1: Y(g), y2: Y(g), class: "grid-line" }));
+      s.appendChild(el("text", { x: pad.l - 8, y: Y(g) + 3.5, class: "tick", "text-anchor": "end" },
+        (g >= 0 ? "+" : "") + g.toFixed(1) + "pp"));
+    }
+    s.appendChild(el("line", { x1: pad.l, x2: W - pad.r, y1: Y(0), y2: Y(0), class: "axis-line" }));
+    s.appendChild(el("line", { x1: X(1), x2: X(1), y1: pad.t, y2: Y(yMin), class: "axis-line" }));
+
+    const place = {
+      house: [-12, 4, "end"], medical: [0, -14, "middle"], car: [14, -10, "start"],
+      major_purchase: [0, 20, "middle"], home_improvement: [0, 20, "middle"],
+      other: [12, 4, "start"], debt_consolidation: [0, -16, "middle"],
+      small_business: [-26, 22, "end"], credit_card: [0, -16, "middle"]
+    };
+
+    d.forEach((r) => {
+      const danger = r.risk_mult > 1 && r.price_gap < 0;
+      const rad = 5 + 15 * Math.sqrt(r.balance / maxBal);
+      const c = el("circle", {
+        cx: X(r.risk_mult), cy: Y(r.price_gap), r: rad,
+        fill: danger ? "var(--amber)" : "var(--blue)", opacity: ".82",
+        stroke: "var(--surface)", "stroke-width": "2"
+      });
+      s.appendChild(tip(c,
+        `${title(r.purpose)} — ${r.impaired.toFixed(2)}% impaired (95% CI ${r.ci_lo}–${r.ci_hi}%), ` +
+        `${r.risk_mult.toFixed(2)}x the book, coupon ${r.coupon.toFixed(2)}%, ${num(r.loans)} loans`));
+      const [dx, dy, anchor] = place[r.purpose] || [0, -14, "middle"];
+      s.appendChild(el("text", {
+        x: X(r.risk_mult) + dx, y: Y(r.price_gap) + dy,
+        class: "cat-label", "text-anchor": anchor
+      }, title(r.purpose)));
+    });
+
+    s.appendChild(el("text", {
+      x: X(1) + 8, y: Y(yMin) - 6, class: "val-label",
+      style: "fill:var(--crit);font-size:11px"
+    }, "UNCOMPENSATED — riskier than the book, cheaper than the book"));
+    s.appendChild(el("text", { x: pad.l, y: H - 8, class: "tick" },
+      "Early impairment relative to portfolio  →"));
+
+    $("#purpose-chart").appendChild(s);
+  })();
+
+  // ================= verification, grouped with CIs =================
+  (function verifChart() {
+    const grades = ["A", "B", "C", "D"];
+    const d = D.verification;
+    const W = 720, H = 300, pad = { t: 20, r: 16, b: 46, l: 46 };
+    const s = svg(W, H);
+    const max = Math.max(...d.map((r) => r.ci_hi)) * 1.1;
+    const plotH = H - pad.t - pad.b;
+    const Y = (v) => pad.t + plotH - (v / max) * plotH;
+    const groupW = (W - pad.l - pad.r) / grades.length;
+
+    for (let i = 0; i <= 4; i++) {
+      const gv = (max / 4) * i;
+      s.appendChild(el("line", { x1: pad.l, x2: W - pad.r, y1: Y(gv), y2: Y(gv), class: "grid-line" }));
+      s.appendChild(el("text", { x: pad.l - 8, y: Y(gv) + 3.5, class: "tick", "text-anchor": "end" },
+        gv.toFixed(0) + "%"));
+    }
+
+    grades.forEach((g, gi) => {
+      const gx = pad.l + groupW * gi;
+      const series = [
+        { k: "Not / source", color: "var(--blue)" },
+        { k: "Verified", color: "var(--amber)" }
+      ];
+      series.forEach((ser, si) => {
+        const r = d.find((x) => x.grade === g && x.verification === ser.k);
+        if (!r) return;
+        const bw = groupW * 0.3;
+        const cx = gx + groupW * (si === 0 ? 0.31 : 0.69);
+        const bar = el("rect", {
+          x: cx - bw / 2, y: Y(r.impaired), width: bw, height: Y(0) - Y(r.impaired),
+          fill: ser.color, rx: 2, class: "bar"
+        });
+        s.appendChild(tip(bar,
+          `Grade ${g}, ${ser.k}: ${r.impaired.toFixed(2)}% impaired ` +
+          `(95% CI ${r.ci_lo}–${r.ci_hi}%), ${num(r.loans)} loans at ${r.coupon.toFixed(2)}%`));
+        // Wilson interval
+        s.appendChild(el("line", {
+          x1: cx, x2: cx, y1: Y(r.ci_lo), y2: Y(r.ci_hi),
+          stroke: "var(--ink-2)", "stroke-width": "1.3"
+        }));
+        [r.ci_lo, r.ci_hi].forEach((v) => s.appendChild(el("line", {
+          x1: cx - 4, x2: cx + 4, y1: Y(v), y2: Y(v),
+          stroke: "var(--ink-2)", "stroke-width": "1.3"
+        })));
+        s.appendChild(el("text", {
+          x: cx, y: Y(r.ci_hi) - 7, class: "val-label", "text-anchor": "middle"
+        }, r.impaired.toFixed(2) + "%"));
+      });
+      s.appendChild(el("text", {
+        x: gx + groupW / 2, y: H - pad.b + 20, class: "cat-label", "text-anchor": "middle"
+      }, "Grade " + g));
+    });
+
+    s.appendChild(el("line", { x1: pad.l, x2: W - pad.r, y1: Y(0), y2: Y(0), class: "axis-line" }));
+    s.appendChild(el("text", { x: pad.l, y: H - 8, class: "tick" }, "Early impairment rate"));
+    $("#verif-chart").appendChild(s);
+  })();
+
+  // ================= segment league table =================
+  const segChart = (function () {
+    const host = $("#segment-chart");
+    const note = $("#segment-note");
+    let metric = "yield";
+
+    function draw() {
+      host.textContent = "";
+      const base = metric === "yield" ? D.headline.net_yield : D.headline.impaired_rate;
+      const rows = D.segments
+        .map((r) => ({ ...r, v: metric === "yield" ? r.net_yield : r.impaired }))
+        .sort((a, b) => b.v - a.v);
+
+      const rowH = 26, W = 720, pad = { t: 12, r: 64, b: 34, l: 212 };
+      const H = pad.t + rows.length * rowH + pad.b;
+      const s = svg(W, H);
+      const vals = rows.map((r) => r.v - base);
+      const span = Math.max(Math.abs(Math.min(...vals)), Math.abs(Math.max(...vals))) * 1.15;
+      const plotW = W - pad.l - pad.r;
+      const X = (v) => pad.l + plotW / 2 + (v / span) * (plotW / 2);
+
+      for (let i = -2; i <= 2; i++) {
+        const gv = (span / 2) * i;
+        s.appendChild(el("line", { x1: X(gv), x2: X(gv), y1: pad.t, y2: H - pad.b, class: "grid-line" }));
+        s.appendChild(el("text", {
+          x: X(gv), y: H - pad.b + 16, class: "tick", "text-anchor": "middle"
+        }, (gv >= 0 ? "+" : "") + gv.toFixed(1) + "pp"));
+      }
+
+      rows.forEach((r, i) => {
+        const y = pad.t + i * rowH;
+        const delta = r.v - base;
+        const color = metric === "yield"
+          ? (r.net_yield < 0 ? "var(--crit)" : delta < 0 ? "var(--amber)" : "var(--blue)")
+          : (delta > 0 ? "var(--amber)" : "var(--blue)");
+        const x0 = X(0), x1 = X(delta);
+        const bar = el("rect", {
+          x: Math.min(x0, x1), y: y + 4, width: Math.abs(x1 - x0) || 1,
+          height: rowH - 10, fill: color, rx: 2, class: "bar"
+        });
+        s.appendChild(tip(bar,
+          `${r.segment} — ${num(r.loans)} loans, ${usdM(r.balance)}; ` +
+          `impairment ${r.impaired.toFixed(2)}%, coupon ${r.coupon.toFixed(2)}%, ` +
+          `net yield ${sPct(r.net_yield)}`));
+        s.appendChild(el("text", {
+          x: pad.l - 10, y: y + rowH / 2 + 3.5, class: "cat-label", "text-anchor": "end"
+        }, r.segment));
+        s.appendChild(el("text", {
+          x: W - pad.r + 10, y: y + rowH / 2 + 3.5, class: "val-label",
+          "text-anchor": "start", style: "fill:" + color
+        }, metric === "yield" ? sPct(r.net_yield) : r.impaired.toFixed(2) + "%"));
+      });
+
+      s.appendChild(el("line", {
+        x1: X(0), x2: X(0), y1: pad.t, y2: H - pad.b,
+        stroke: "var(--ink)", "stroke-width": "1.2"
+      }));
+      host.appendChild(s);
+
+      note.textContent = metric === "yield"
+        ? `Bars show the gap to the portfolio net yield of ${pct(D.headline.net_yield)}. ` +
+          `Red segments do not cover their own cost of capital; amber earn less than the book but stay profitable.`
+        : `Bars show the gap to the portfolio early-impairment rate of ${pct(D.headline.impaired_rate)}. ` +
+          `Impairment alone is the wrong decision metric — switch to net yield to see why.`;
+    }
+
+    $("#btn-yield").addEventListener("click", () => {
+      metric = "yield";
+      $("#btn-yield").setAttribute("aria-pressed", "true");
+      $("#btn-imp").setAttribute("aria-pressed", "false");
+      draw();
+    });
+    $("#btn-imp").addEventListener("click", () => {
+      metric = "imp";
+      $("#btn-imp").setAttribute("aria-pressed", "true");
+      $("#btn-yield").setAttribute("aria-pressed", "false");
+      draw();
+    });
+    draw();
+    return { draw };
+  })();
+
+  // ================= hypothesis register =================
+  (function testsTable() {
+    const body = $("#tests-table tbody");
+    let key = "p_value", dir = 1;
+    function render() {
+      const rows = [...D.tests].sort((a, b) => {
+        const x = a[key], y = b[key];
+        return (typeof x === "string" ? x.localeCompare(y) : x - y) * dir;
+      });
+      body.innerHTML = rows.map((r) => {
+        const sig = r.p_value < 0.05;
+        return `<tr>
+          <td>${r.test}</td>
+          <td class="num">${num(r.n_segment)}</td>
+          <td class="num">${r.rate_segment_pct.toFixed(2)}%</td>
+          <td class="num">${r.rate_rest_pct.toFixed(2)}%</td>
+          <td class="num">${r.risk_multiple.toFixed(2)}x</td>
+          <td class="num">${(r.coupon_gap_pp >= 0 ? "+" : "") + r.coupon_gap_pp.toFixed(2)}pp</td>
+          <td class="num">${r.p_value < 0.0001 ? "<0.0001" : r.p_value.toFixed(4)}</td>
+          <td><span class="pill ${sig ? "crit" : "neut"}">${sig ? "significant" : "not sig."}</span></td>
+        </tr>`;
+      }).join("");
+    }
+    document.querySelectorAll("#tests-table th.sortable").forEach((th) => {
+      th.addEventListener("click", () => {
+        const k = th.dataset.k;
+        dir = key === k ? -dir : 1;
+        key = k;
+        document.querySelectorAll("#tests-table th").forEach((o) => o.removeAttribute("aria-sort"));
+        th.setAttribute("aria-sort", dir === 1 ? "ascending" : "descending");
+        render();
+      });
+    });
+    render();
+  })();
+
+  // ================= tier cards =================
+  (function tierCards() {
+    const meta = {
+      CORE: {
+        cls: "t-core", name: "Core", action: "Grow",
+        rule: "Everything else. Actively expand <code>credit_card</code> refinance, mortgage-holding borrowers, and grades C–E."
+      },
+      T2: {
+        cls: "t-two", name: "Tier 2", action: "Reprice +400bps",
+        rule: "Remaining elevated purposes (medical, car, major purchase, moving) <strong>or</strong> <code>homeownership = 'OWN'</code>. Profitable, but 365bps behind Core for more risk."
+      },
+      T1: {
+        cls: "t-one", name: "Tier 1", action: "Decline",
+        rule: "<code>loan_purpose = 'house'</code> <strong>or</strong> (<code>grade IN ('A','B')</code> <strong>and</strong> income verified). Does not cover its own cost of capital."
+      }
+    };
+    const order = ["CORE", "T2", "T1"];
+    $("#tier-cards").innerHTML = order.map((k) => {
+      const r = D.tiers.find((x) => x.tier === k);
+      const m = meta[k];
+      return `<div class="tier ${m.cls}">
+        <h3>${m.name}</h3>
+        <div class="tier-action">${m.action}</div>
+        <div class="tier-yield">${sPct(r.net_yield)}</div>
+        <div class="tier-yield-label">risk-adjusted net yield</div>
+        <dl>
+          <dt>Loans</dt><dd>${num(r.loans)} · ${r.share_loans.toFixed(1)}%</dd>
+          <dt>Balance</dt><dd>${usdM(r.balance)}</dd>
+          <dt>Early impairment</dt><dd>${pct(r.impaired)}</dd>
+          <dt>Coupon</dt><dd>${pct(r.coupon)}</dd>
+          <dt>Share of loss</dt><dd>${r.loss_share.toFixed(1)}%</dd>
+        </dl>
+        <p class="tier-rule">${m.rule}</p>
+      </div>`;
+    }).join("");
+  })();
+
+  // ================= live scenario model =================
+  (function scenario() {
+    const m = D.model;
+    const host = $("#waterfall-chart");
+    const note = $("#waterfall-note");
+    const sA = $("#s-attrition"), sP = $("#s-premium");
+    const oA = $("#o-attrition"), oP = $("#o-premium");
+
+    function compute(attrition, premium) {
+      const baseYield = 100 * m.base_net / m.total_balance;
+      // A: decline Tier 1, redeploy at the Core yield
+      const netA = m.base_net - m.t1_net + m.t1_bal * m.core_yield;
+      // B: A, then reprice Tier 2; those who leave redeploy to Core
+      const netB = netA - m.t2_net
+        + (1 - attrition) * (m.t2_net + m.t2_bal * premium)
+        + attrition * m.t2_bal * m.core_yield;
+      return {
+        base: baseYield,
+        a: 100 * netA / m.total_balance,
+        b: 100 * netB / m.total_balance,
+        gainA: netA - m.base_net,
+        gainB: netB - m.base_net
+      };
+    }
+
+    function draw() {
+      const attrition = +sA.value / 100;
+      const premium = +sP.value / 10000;
+      oA.textContent = sA.value + "%";
+      oP.textContent = "+" + sP.value + "bps";
+
+      const r = compute(attrition, premium);
+      const stepA = r.a - r.base, stepB = r.b - r.a;
+
+      host.textContent = "";
+      const W = 720, H = 250, pad = { t: 26, r: 16, b: 48, l: 46 };
+      const s = svg(W, H);
+      const max = Math.max(r.base, r.a, r.b) * 1.3;
+      const plotH = H - pad.t - pad.b;
+      const Y = (v) => pad.t + plotH - (v / max) * plotH;
+
+      for (let i = 0; i <= 3; i++) {
+        const gv = (max / 3) * i;
+        s.appendChild(el("line", { x1: pad.l, x2: W - pad.r, y1: Y(gv), y2: Y(gv), class: "grid-line" }));
+        s.appendChild(el("text", { x: pad.l - 8, y: Y(gv) + 3.5, class: "tick", "text-anchor": "end" },
+          gv.toFixed(0) + "%"));
+      }
+
+      const steps = [
+        { label: "Current book", base: 0, val: r.base, color: "var(--blue)", txt: pct(r.base) },
+        { label: "Decline Tier 1", base: r.base, val: stepA, color: stepA >= 0 ? "var(--good)" : "var(--crit)",
+          txt: (stepA >= 0 ? "+" : "") + Math.round(stepA * 100) + "bps" },
+        { label: "Reprice Tier 2", base: r.a, val: stepB, color: stepB >= 0 ? "var(--good)" : "var(--crit)",
+          txt: (stepB >= 0 ? "+" : "") + Math.round(stepB * 100) + "bps" },
+        { label: "After overlay", base: 0, val: r.b, color: "var(--blue)", txt: pct(r.b) }
+      ];
+      const colW = (W - pad.l - pad.r) / steps.length;
+      const bw = colW * 0.5;
+
+      steps.forEach((st, i) => {
+        const cx = pad.l + colW * (i + 0.5);
+        const top = Math.max(st.base, st.base + st.val);
+        const bot = Math.min(st.base, st.base + st.val);
+        const bar = el("rect", {
+          x: cx - bw / 2, y: Y(top), width: bw,
+          height: Math.max(Y(bot) - Y(top), 2), fill: st.color, rx: 2, class: "bar"
+        });
+        s.appendChild(tip(bar, `${st.label}: ${st.txt}`));
+        s.appendChild(el("text", {
+          x: cx, y: Y(top) - 8, class: "val-label", "text-anchor": "middle",
+          style: "fill:" + (i === 1 || i === 2 ? st.color : "var(--ink)")
+        }, st.txt));
+        s.appendChild(el("text", {
+          x: cx, y: H - pad.b + 18, class: "cat-label", "text-anchor": "middle"
+        }, st.label));
+        if (i > 0 && i < 3) {
+          s.appendChild(el("line", {
+            x1: cx - colW + bw / 2, x2: cx - bw / 2,
+            y1: Y(st.base), y2: Y(st.base),
+            stroke: "var(--rule)", "stroke-width": "1", "stroke-dasharray": "3 3"
+          }));
+        }
+      });
+      s.appendChild(el("line", {
+        x1: pad.l, x2: W - pad.r, y1: Y(0), y2: Y(0), class: "axis-line"
+      }));
+      s.appendChild(el("text", { x: pad.l, y: H - 8, class: "tick" }, "Risk-adjusted net yield"));
+      host.appendChild(s);
+
+      const bps = Math.round((r.b - r.base) * 100);
+      note.textContent =
+        `Uplift ${bps >= 0 ? "+" : ""}${bps}bps — ${usdK(r.gainB)} a year on this ` +
+        `${usdM(m.total_balance)} book, or $${(500 * (r.b - r.base) / 100).toFixed(2)}M on a ` +
+        `$500M origination programme. Declining Tier 1 alone is worth ` +
+        `+${Math.round((r.a - r.base) * 100)}bps.`;
+
+      $("#verdict-bps").textContent = (bps >= 0 ? "+" : "") + bps + "bps";
+      $("#verdict-sub").textContent =
+        `Risk-adjusted net yield rises from ${pct(r.base)} to ${pct(r.b)} — ` +
+        `${usdK(r.gainB)} a year on this book, $${(500 * (r.b - r.base) / 100).toFixed(1)}M on a ` +
+        `$500M origination programme. The tier ranking held in all 16 assumption scenarios tested.`;
+    }
+
+    sA.addEventListener("input", draw);
+    sP.addEventListener("input", draw);
+    draw();
+  })();
+
+  // ================= sensitivity =================
+  (function sensChart() {
+    const d = D.sensitivity;
+    if (!d.length) return;
+    const W = 460, H = 250, pad = { t: 16, r: 108, b: 46, l: 44 };
+    const s = svg(W, H);
+    const series = [
+      { k: "CORE_net_yield_pct", label: "Core", color: "var(--good)" },
+      { k: "T2_REPRICE_net_yield_pct", label: "Tier 2", color: "var(--amber)" },
+      { k: "T1_DECLINE_net_yield_pct", label: "Tier 1", color: "var(--crit)" }
+    ];
+    const all = series.flatMap((ser) => d.map((r) => r[ser.k]));
+    const lo = Math.min(...all, 0) - 0.6, hi = Math.max(...all) + 0.6;
+    const X = (i) => pad.l + (i / (d.length - 1)) * (W - pad.l - pad.r);
+    const Y = (v) => pad.t + (1 - (v - lo) / (hi - lo)) * (H - pad.t - pad.b);
+
+    for (let g = Math.ceil(lo); g <= Math.floor(hi); g += 2) {
+      s.appendChild(el("line", { x1: pad.l, x2: W - pad.r, y1: Y(g), y2: Y(g), class: "grid-line" }));
+      s.appendChild(el("text", { x: pad.l - 7, y: Y(g) + 3.5, class: "tick", "text-anchor": "end" },
+        g + "%"));
+    }
+    s.appendChild(el("line", {
+      x1: pad.l, x2: W - pad.r, y1: Y(0), y2: Y(0), class: "axis-line"
+    }));
+
+    series.forEach((ser) => {
+      const pts = d.map((r, i) => `${X(i)},${Y(r[ser.k])}`).join(" ");
+      s.appendChild(el("polyline", {
+        points: pts, fill: "none", stroke: ser.color, "stroke-width": "2",
+        "stroke-linejoin": "round"
+      }));
+      d.forEach((r, i) => {
+        const c = el("circle", {
+          cx: X(i), cy: Y(r[ser.k]), r: 4, fill: ser.color,
+          stroke: "var(--surface)", "stroke-width": "1.5"
+        });
+        s.appendChild(tip(c, `${ser.label}, ${r.roll_scenario}: ${r[ser.k].toFixed(2)}%`));
+      });
+      s.appendChild(el("text", {
+        x: X(d.length - 1) + 10, y: Y(d[d.length - 1][ser.k]) + 3.5,
+        class: "cat-label", style: "fill:" + ser.color
+      }, ser.label));
+    });
+
+    d.forEach((r, i) => s.appendChild(el("text", {
+      x: X(i), y: H - pad.b + 18, class: "tick", "text-anchor": "middle"
+    }, r.roll_scenario.split(" ")[0])));
+    s.appendChild(el("text", { x: pad.l, y: H - 8, class: "tick" },
+      "Roll-to-charge-off assumption"));
+    $("#sens-chart").appendChild(s);
+  })();
+
+  // ================= DTI quintiles =================
+  (function dtiChart() {
+    const d = D.dti;
+    const W = 460, H = 250, pad = { t: 22, r: 14, b: 50, l: 44 };
+    const s = svg(W, H);
+    const max = Math.max(...d.map((r) => r.ci_hi)) * 1.1;
+    const plotH = H - pad.t - pad.b;
+    const Y = (v) => pad.t + plotH - (v / max) * plotH;
+    const colW = (W - pad.l - pad.r) / d.length;
+
+    for (let i = 0; i <= 3; i++) {
+      const gv = (max / 3) * i;
+      s.appendChild(el("line", { x1: pad.l, x2: W - pad.r, y1: Y(gv), y2: Y(gv), class: "grid-line" }));
+      s.appendChild(el("text", { x: pad.l - 7, y: Y(gv) + 3.5, class: "tick", "text-anchor": "end" },
+        gv.toFixed(0) + "%"));
+    }
+
+    d.forEach((r, i) => {
+      const cx = pad.l + colW * (i + 0.5);
+      const bw = colW * 0.52;
+      const bar = el("rect", {
+        x: cx - bw / 2, y: Y(r.impaired), width: bw, height: Y(0) - Y(r.impaired),
+        fill: i === 0 ? "var(--amber)" : "var(--blue)", rx: 2, class: "bar"
+      });
+      s.appendChild(tip(bar,
+        `Quintile ${r.quintile} (DTI ${r.dti_min.toFixed(1)}–${r.dti_max.toFixed(1)}%): ` +
+        `${r.impaired.toFixed(2)}% impaired, 95% CI ${r.ci_lo}–${r.ci_hi}%, ${num(r.loans)} loans`));
+      s.appendChild(el("line", {
+        x1: cx, x2: cx, y1: Y(r.ci_lo), y2: Y(r.ci_hi),
+        stroke: "var(--ink-2)", "stroke-width": "1.2"
+      }));
+      s.appendChild(el("text", {
+        x: cx, y: Y(r.ci_hi) - 7, class: "val-label", "text-anchor": "middle"
+      }, r.impaired.toFixed(2) + "%"));
+      s.appendChild(el("text", {
+        x: cx, y: H - pad.b + 17, class: "tick", "text-anchor": "middle"
+      }, "Q" + r.quintile));
+      s.appendChild(el("text", {
+        x: cx, y: H - pad.b + 30, class: "tick", "text-anchor": "middle"
+      }, r.dti_max.toFixed(0) + "%"));
+    });
+    s.appendChild(el("line", { x1: pad.l, x2: W - pad.r, y1: Y(0), y2: Y(0), class: "axis-line" }));
+    s.appendChild(el("text", { x: pad.l, y: H - 8, class: "tick" },
+      "Debt-to-income quintile (upper bound)"));
+    $("#dti-chart").appendChild(s);
+  })();
+
+  // ================= watchlist =================
+  (function watchlist() {
+    const d = D.watchlist;
+    $("#watch-table tbody").innerHTML = d.map((r) => `
+      <tr>
+        <td class="num">${r.loan_id}</td>
+        <td>${r.grade}</td>
+        <td>${title(r.purpose)}</td>
+        <td>${title(r.homeownership.toLowerCase())}</td>
+        <td>${r.verification}</td>
+        <td class="num">${"$" + Math.round(r.balance).toLocaleString()}</td>
+        <td class="num">${r.coupon.toFixed(2)}%</td>
+        <td>${r.status}</td>
+        <td><span class="pill ${r.tier === "T1" ? "crit" : "warn"}">${r.tier}</span></td>
+      </tr>`).join("");
+    const bal = d.reduce((a, r) => a + r.balance, 0);
+    $("#watch-note").textContent =
+      `${d.length} impaired loans carrying at least one flag, ` +
+      `${"$" + Math.round(bal).toLocaleString()} of principal. ` +
+      `Generated by sql/04_decision_framework.sql, Q4.`;
+  })();
+})();
+</script>

@@ -1,0 +1,13 @@
+assumption,value,CORE,T2_REPRICE,T1_DECLINE,T1_still_negative,ranking_preserved
+loss given default,0.7,6.68,3.67,0.81,False,True
+loss given default,0.85,6.16,2.51,-0.18,True,True
+loss given default,0.95,5.81,1.73,-0.84,True,True
+cost of funds,0.02,7.16,3.51,0.82,False,True
+cost of funds,0.03,6.16,2.51,-0.18,True,True
+cost of funds,0.045,4.66,1.01,-1.68,True,True
+servicing cost,0.005,6.66,3.01,0.32,False,True
+servicing cost,0.01,6.16,2.51,-0.18,True,True
+servicing cost,0.02,5.16,1.51,-1.18,True,True
+lifetime loss anchor,0.06,7.15,4.71,1.69,False,True
+lifetime loss anchor,0.09,6.16,2.51,-0.18,True,True
+lifetime loss anchor,0.13,4.83,-0.43,-2.67,True,True

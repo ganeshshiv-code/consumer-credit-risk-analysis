@@ -1,0 +1,1178 @@
+{
+ "headline": {
+  "loans": 10000,
+  "originated": 163619225.0,
+  "outstanding": 144589166.10000053,
+  "impaired_rate": 1.78,
+  "impaired_balance": 2999677.9299999992,
+  "coupon": 12.660384996224828,
+  "net_yield": 4.80716192079106
+ },
+ "status_mix": [
+  {
+   "status": "Charged Off",
+   "loans": 7,
+   "balance": 0.0,
+   "roll": 1.0
+  },
+  {
+   "status": "Late (31-120 days)",
+   "loans": 66,
+   "balance": 1214912.21,
+   "roll": 0.7
+  },
+  {
+   "status": "Late (16-30 days)",
+   "loans": 38,
+   "balance": 607822.0399999998,
+   "roll": 0.45
+  },
+  {
+   "status": "In Grace Period",
+   "loans": 67,
+   "balance": 1176943.6799999997,
+   "roll": 0.3
+  },
+  {
+   "status": "Current",
+   "loans": 9375,
+   "balance": 141589488.17000046,
+   "roll": 0.0
+  },
+  {
+   "status": "Fully Paid",
+   "loans": 447,
+   "balance": 0.0,
+   "roll": 0.0
+  }
+ ],
+ "grades": [
+  {
+   "grade": "A",
+   "loans": 2459,
+   "balance": 32938246.47000003,
+   "impaired": 0.7726718178,
+   "coupon": 6.6928349533,
+   "loss": 1.7041756661,
+   "net_yield": 0.9886592872
+  },
+  {
+   "grade": "B",
+   "loans": 3037,
+   "balance": 43764409.05000009,
+   "impaired": 1.0865986171,
+   "coupon": 10.5160316904,
+   "loss": 2.1598711916,
+   "net_yield": 4.3561604988
+  },
+  {
+   "grade": "C",
+   "loans": 2653,
+   "balance": 39647349.0099999,
+   "impaired": 1.9600452318,
+   "coupon": 14.154858316,
+   "loss": 3.926538257,
+   "net_yield": 6.2283200589
+  },
+  {
+   "grade": "D",
+   "loans": 1446,
+   "balance": 21420548.919999998,
+   "impaired": 3.3886583679,
+   "coupon": 19.1586689072,
+   "loss": 7.4235775806,
+   "net_yield": 7.7350913267
+  },
+  {
+   "grade": "E",
+   "loans": 335,
+   "balance": 5380868.200000002,
+   "impaired": 5.0746268657,
+   "coupon": 25.2261348632,
+   "loss": 10.1539124846,
+   "net_yield": 11.0722223785
+  },
+  {
+   "grade": "F",
+   "loans": 58,
+   "balance": 1165343.66,
+   "impaired": 12.0689655172,
+   "coupon": 29.3077923001,
+   "loss": 25.6580877122,
+   "net_yield": -0.3502954121
+  },
+  {
+   "grade": "G",
+   "loans": 12,
+   "balance": 272400.79,
+   "impaired": 8.3333333333,
+   "coupon": 30.8089418614,
+   "loss": 26.5967392709,
+   "net_yield": 0.2122025905
+  }
+ ],
+ "verification": [
+  {
+   "grade": "A",
+   "verification": "Not / source",
+   "loans": 2107,
+   "impaired_n": 10.0,
+   "impaired": 0.474608448,
+   "coupon": 6.7246274324,
+   "ci_lo": 0.26,
+   "ci_hi": 0.87
+  },
+  {
+   "grade": "A",
+   "verification": "Verified",
+   "loans": 352,
+   "impaired_n": 9.0,
+   "impaired": 2.5568181818,
+   "coupon": 6.8503977273,
+   "ci_lo": 1.35,
+   "ci_hi": 4.79
+  },
+  {
+   "grade": "B",
+   "verification": "Not / source",
+   "loans": 2494,
+   "impaired_n": 23.0,
+   "impaired": 0.9222133119,
+   "coupon": 10.4948676824,
+   "ci_lo": 0.62,
+   "ci_hi": 1.38
+  },
+  {
+   "grade": "B",
+   "verification": "Verified",
+   "loans": 543,
+   "impaired_n": 10.0,
+   "impaired": 1.8416206262,
+   "coupon": 10.6583793738,
+   "ci_lo": 1.0,
+   "ci_hi": 3.36
+  },
+  {
+   "grade": "C",
+   "verification": "Not / source",
+   "loans": 1976,
+   "impaired_n": 36.0,
+   "impaired": 1.8218623482,
+   "coupon": 14.1559767206,
+   "ci_lo": 1.32,
+   "ci_hi": 2.51
+  },
+  {
+   "grade": "C",
+   "verification": "Verified",
+   "loans": 677,
+   "impaired_n": 16.0,
+   "impaired": 2.3633677991,
+   "coupon": 14.2371787297,
+   "ci_lo": 1.46,
+   "ci_hi": 3.8
+  },
+  {
+   "grade": "D",
+   "verification": "Not / source",
+   "loans": 912,
+   "impaired_n": 36.0,
+   "impaired": 3.9473684211,
+   "coupon": 19.0302412281,
+   "ci_lo": 2.86,
+   "ci_hi": 5.42
+  },
+  {
+   "grade": "D",
+   "verification": "Verified",
+   "loans": 534,
+   "impaired_n": 13.0,
+   "impaired": 2.4344569288,
+   "coupon": 19.2555617978,
+   "ci_lo": 1.43,
+   "ci_hi": 4.12
+  }
+ ],
+ "purposes": [
+  {
+   "purpose": "house",
+   "loans": 151,
+   "impaired_n": 10.0,
+   "balance": 2340264.63,
+   "impaired": 6.6225165563,
+   "risk_mult": 3.7205149193,
+   "coupon": 11.3698675497,
+   "price_gap": -1.2905174466,
+   "ci_lo": 3.64,
+   "ci_hi": 11.76
+  },
+  {
+   "purpose": "medical",
+   "loans": 162,
+   "impaired_n": 6.0,
+   "balance": 1474723.5899999994,
+   "impaired": 3.7037037037,
+   "risk_mult": 2.0807324178,
+   "coupon": 12.1511728395,
+   "price_gap": -0.5092121567,
+   "ci_lo": 1.71,
+   "ci_hi": 7.84
+  },
+  {
+   "purpose": "car",
+   "loans": 131,
+   "impaired_n": 4.0,
+   "balance": 1224529.8100000005,
+   "impaired": 3.0534351145,
+   "risk_mult": 1.7154129857,
+   "coupon": 12.0380152672,
+   "price_gap": -0.622369729,
+   "ci_lo": 1.19,
+   "ci_hi": 7.59
+  },
+  {
+   "purpose": "major_purchase",
+   "loans": 303,
+   "impaired_n": 9.0,
+   "balance": 4078480.98,
+   "impaired": 2.9702970297,
+   "risk_mult": 1.6687061965,
+   "coupon": 11.9662706271,
+   "price_gap": -0.6941143692,
+   "ci_lo": 1.57,
+   "ci_hi": 5.55
+  },
+  {
+   "purpose": "home_improvement",
+   "loans": 680,
+   "impaired_n": 15.0,
+   "balance": 10333654.190000001,
+   "impaired": 2.2058823529,
+   "risk_mult": 1.2392597488,
+   "coupon": 11.6203088235,
+   "price_gap": -1.0400761727,
+   "ci_lo": 1.34,
+   "ci_hi": 3.61
+  },
+  {
+   "purpose": "other",
+   "loans": 914,
+   "impaired_n": 17.0,
+   "balance": 10231809.159999996,
+   "impaired": 1.8599562363,
+   "risk_mult": 1.0449192339,
+   "coupon": 12.4257658643,
+   "price_gap": -0.2346191319,
+   "ci_lo": 1.16,
+   "ci_hi": 2.96
+  },
+  {
+   "purpose": "debt_consolidation",
+   "loans": 5144,
+   "impaired_n": 88.0,
+   "balance": 80496048.29999995,
+   "impaired": 1.7107309487,
+   "risk_mult": 0.9610848026,
+   "coupon": 13.0095412131,
+   "price_gap": 0.3491562168,
+   "ci_lo": 1.39,
+   "ci_hi": 2.1
+  },
+  {
+   "purpose": "small_business",
+   "loans": 125,
+   "impaired_n": 2.0,
+   "balance": 2205848.0599999996,
+   "impaired": 1.6,
+   "risk_mult": 0.8988764045,
+   "coupon": 13.00256,
+   "price_gap": 0.3421750038,
+   "ci_lo": 0.44,
+   "ci_hi": 5.65
+  },
+  {
+   "purpose": "credit_card",
+   "loans": 2249,
+   "impaired_n": 24.0,
+   "balance": 31139677.18000009,
+   "impaired": 1.0671409515,
+   "risk_mult": 0.5995173885,
+   "coupon": 11.4323432637,
+   "price_gap": -1.2280417326,
+   "ci_lo": 0.72,
+   "ci_hi": 1.58
+  }
+ ],
+ "flag_stack": [
+  {
+   "bucket": "No flags",
+   "srt": 0,
+   "loans": 7254,
+   "impaired": 1.4750482492,
+   "coupon": 13.132030965,
+   "balance": 104633355.53000012,
+   "loss_share": 55.8887817822
+  },
+  {
+   "bucket": "1 flag",
+   "srt": 1,
+   "loans": 2446,
+   "impaired": 2.41210139,
+   "coupon": 11.5922041137,
+   "balance": 35523981.699999996,
+   "loss_share": 37.0376989156
+  },
+  {
+   "bucket": "2+ flags",
+   "srt": 2,
+   "loans": 300,
+   "impaired": 4.0,
+   "coupon": 10.0872120363,
+   "balance": 4431828.869999998,
+   "loss_share": 7.0735193022
+  }
+ ],
+ "tiers": [
+  {
+   "tier": "CORE",
+   "loans": 7254,
+   "balance": 104633355.53000012,
+   "impaired": 1.4750482492,
+   "coupon": 13.132030965,
+   "net_yield": 6.1561579474,
+   "loss_share": 55.8887817822,
+   "share_loans": 72.54
+  },
+  {
+   "tier": "T2",
+   "loans": 1720,
+   "balance": 21611344.399999995,
+   "impaired": 2.5581395349,
+   "coupon": 13.1171092884,
+   "net_yield": 2.5082041548,
+   "loss_share": 25.6360669335,
+   "share_loans": 17.2
+  },
+  {
+   "tier": "T1",
+   "loans": 1026,
+   "balance": 18344466.170000017,
+   "impaired": 2.6315789474,
+   "coupon": 9.4321457136,
+   "net_yield": -0.1788873855,
+   "loss_share": 18.4751512843,
+   "share_loans": 10.26
+  }
+ ],
+ "segments": [
+  {
+   "segment": "Grade E",
+   "loans": 335,
+   "balance": 5380868.200000003,
+   "impaired": 5.0746268657,
+   "coupon": 25.2261348632,
+   "net_yield": 11.0722223785,
+   "vs_port": 6.2650604577
+  },
+  {
+   "segment": "Grade D",
+   "loans": 1446,
+   "balance": 21420548.919999998,
+   "impaired": 3.3886583679,
+   "coupon": 19.1586689072,
+   "net_yield": 7.7350913267,
+   "vs_port": 2.9279294059
+  },
+  {
+   "segment": "Grade C",
+   "loans": 2653,
+   "balance": 39647349.0099999,
+   "impaired": 1.9600452318,
+   "coupon": 14.154858316,
+   "net_yield": 6.2283200589,
+   "vs_port": 1.4211581381
+  },
+  {
+   "segment": "Joint application",
+   "loans": 1495,
+   "balance": 26666391.71,
+   "impaired": 2.474916388,
+   "coupon": 13.2682079646,
+   "net_yield": 5.720008107,
+   "vs_port": 0.9128461862
+  },
+  {
+   "segment": "Purpose: credit card",
+   "loans": 2249,
+   "balance": 31139677.18000009,
+   "impaired": 1.0671409515,
+   "coupon": 11.7235092346,
+   "net_yield": 5.3519641919,
+   "vs_port": 0.5448022711
+  },
+  {
+   "segment": "Homeowner: mortgage",
+   "loans": 4789,
+   "balance": 76772180.53000003,
+   "impaired": 1.4199206515,
+   "coupon": 12.2833362879,
+   "net_yield": 5.3214042926,
+   "vs_port": 0.5142423718
+  },
+  {
+   "segment": "Grade B",
+   "loans": 3037,
+   "balance": 43764409.05000009,
+   "impaired": 1.0865986171,
+   "coupon": 10.5160316904,
+   "net_yield": 4.3561604988,
+   "vs_port": -0.451001422
+  },
+  {
+   "segment": "Grade B - verified",
+   "loans": 543,
+   "balance": 10101831.139999997,
+   "impaired": 1.8416206262,
+   "coupon": 10.6452713568,
+   "net_yield": 3.0993352753,
+   "vs_port": -1.7078266455
+  },
+  {
+   "segment": "Homeowner: owns outright",
+   "loans": 1353,
+   "balance": 18558046.409999996,
+   "impaired": 2.5129342203,
+   "coupon": 12.6296547118,
+   "net_yield": 3.0264710327,
+   "vs_port": -1.7806908881
+  },
+  {
+   "segment": "Grade A - not verified",
+   "loans": 2107,
+   "balance": 26640250.13000006,
+   "impaired": 0.474608448,
+   "coupon": 6.6855856604,
+   "net_yield": 2.0534897897,
+   "vs_port": -2.7536721311
+  },
+  {
+   "segment": "Elevated purposes",
+   "loans": 816,
+   "balance": 9696749.99,
+   "impaired": 3.7990196078,
+   "coupon": 12.3011682461,
+   "net_yield": -2.6375255083,
+   "vs_port": -7.444687429
+  },
+  {
+   "segment": "Grade A - income verified",
+   "loans": 352,
+   "balance": 6297996.339999999,
+   "impaired": 2.5568181818,
+   "coupon": 6.7234991463,
+   "net_yield": -3.5155273464,
+   "vs_port": -8.3226892672
+  },
+  {
+   "segment": "Purpose: house",
+   "loans": 151,
+   "balance": 2340264.63,
+   "impaired": 6.6225165563,
+   "coupon": 11.5299383812,
+   "net_yield": -7.2599862479,
+   "vs_port": -12.0671481687
+  }
+ ],
+ "dti": [
+  {
+   "quintile": 1,
+   "loans": 1996,
+   "impaired_n": 50.0,
+   "dti_min": 0.0,
+   "dti_max": 9.7,
+   "impaired": 2.50501002,
+   "ci_lo": 1.91,
+   "ci_hi": 3.29
+  },
+  {
+   "quintile": 2,
+   "loans": 1995,
+   "impaired_n": 26.0,
+   "dti_min": 9.7,
+   "dti_max": 15.08,
+   "impaired": 1.3032581454,
+   "ci_lo": 0.89,
+   "ci_hi": 1.9
+  },
+  {
+   "quintile": 3,
+   "loans": 1995,
+   "impaired_n": 24.0,
+   "dti_min": 15.09,
+   "dti_max": 20.25,
+   "impaired": 1.2030075188,
+   "ci_lo": 0.81,
+   "ci_hi": 1.78
+  },
+  {
+   "quintile": 4,
+   "loans": 1995,
+   "impaired_n": 39.0,
+   "dti_min": 20.25,
+   "dti_max": 27.03,
+   "impaired": 1.954887218,
+   "ci_lo": 1.43,
+   "ci_hi": 2.66
+  },
+  {
+   "quintile": 5,
+   "loans": 1995,
+   "impaired_n": 38.0,
+   "dti_min": 27.03,
+   "dti_max": 469.09,
+   "impaired": 1.9047619048,
+   "ci_lo": 1.39,
+   "ci_hi": 2.6
+  }
+ ],
+ "model": {
+  "total_balance": 144589166.10000014,
+  "base_net": 6950635.334348555,
+  "t1_bal": 18344466.170000017,
+  "t1_net": -32815.93591315847,
+  "t2_bal": 21611344.399999995,
+  "t2_net": 542056.6381528869,
+  "core_yield": 0.061561579474166545
+ },
+ "scenarios": [
+  {
+   "name": "Current book",
+   "net_yield": 4.81,
+   "uplift_bps": 0
+  },
+  {
+   "name": "A \u00b7 decline Tier 1",
+   "net_yield": 5.61,
+   "uplift_bps": 80
+  },
+  {
+   "name": "B \u00b7 A + reprice Tier 2",
+   "net_yield": 6.19,
+   "uplift_bps": 138
+  }
+ ],
+ "sensitivity": [
+  {
+   "roll_scenario": "optimistic",
+   "grace_roll": 0.15,
+   "late_31_120_roll": 0.55,
+   "CORE_net_yield_pct": 6.17,
+   "T2_REPRICE_net_yield_pct": 2.4,
+   "T1_DECLINE_net_yield_pct": -0.21,
+   "ranking_preserved": true
+  },
+  {
+   "roll_scenario": "base",
+   "grace_roll": 0.3,
+   "late_31_120_roll": 0.7,
+   "CORE_net_yield_pct": 6.16,
+   "T2_REPRICE_net_yield_pct": 2.51,
+   "T1_DECLINE_net_yield_pct": -0.18,
+   "ranking_preserved": true
+  },
+  {
+   "roll_scenario": "severe",
+   "grace_roll": 0.45,
+   "late_31_120_roll": 0.85,
+   "CORE_net_yield_pct": 6.15,
+   "T2_REPRICE_net_yield_pct": 2.56,
+   "T1_DECLINE_net_yield_pct": -0.16,
+   "ranking_preserved": true
+  },
+  {
+   "roll_scenario": "very severe",
+   "grace_roll": 0.6,
+   "late_31_120_roll": 0.95,
+   "CORE_net_yield_pct": 6.14,
+   "T2_REPRICE_net_yield_pct": 2.63,
+   "T1_DECLINE_net_yield_pct": -0.16,
+   "ranking_preserved": true
+  }
+ ],
+ "tests": [
+  {
+   "test": "H1a  Prime (A-B): income Verified vs rest",
+   "n_segment": 895,
+   "impaired_segment": 19,
+   "rate_segment_pct": 2.12,
+   "rate_rest_pct": 0.72,
+   "risk_multiple": 2.96,
+   "coupon_gap_pp": 0.39,
+   "p_value": 0.0004,
+   "verdict": "SIGNIFICANT"
+  },
+  {
+   "test": "H1b  Non-prime (C-G): income Verified vs rest",
+   "n_segment": 1395,
+   "impaired_segment": 39,
+   "rate_segment_pct": 2.8,
+   "rate_rest_pct": 2.8,
+   "risk_multiple": 1.0,
+   "coupon_gap_pp": 1.26,
+   "p_value": 1.0,
+   "verdict": "not significant"
+  },
+  {
+   "test": "H1c  Grade A: income Verified vs rest",
+   "n_segment": 352,
+   "impaired_segment": 9,
+   "rate_segment_pct": 2.56,
+   "rate_rest_pct": 0.47,
+   "risk_multiple": 5.39,
+   "coupon_gap_pp": 0.13,
+   "p_value": 0.00056,
+   "verdict": "SIGNIFICANT"
+  },
+  {
+   "test": "H1c  Grade B: income Verified vs rest",
+   "n_segment": 543,
+   "impaired_segment": 10,
+   "rate_segment_pct": 1.84,
+   "rate_rest_pct": 0.92,
+   "risk_multiple": 2.0,
+   "coupon_gap_pp": 0.16,
+   "p_value": 0.0685,
+   "verdict": "not significant"
+  },
+  {
+   "test": "H1c  Grade C: income Verified vs rest",
+   "n_segment": 677,
+   "impaired_segment": 16,
+   "rate_segment_pct": 2.36,
+   "rate_rest_pct": 1.82,
+   "risk_multiple": 1.3,
+   "coupon_gap_pp": 0.08,
+   "p_value": 0.42136,
+   "verdict": "not significant"
+  },
+  {
+   "test": "H1c  Grade D: income Verified vs rest",
+   "n_segment": 534,
+   "impaired_segment": 13,
+   "rate_segment_pct": 2.43,
+   "rate_rest_pct": 3.95,
+   "risk_multiple": 0.62,
+   "coupon_gap_pp": 0.23,
+   "p_value": 0.13446,
+   "verdict": "not significant"
+  },
+  {
+   "test": "H2a  Purpose 'house' vs rest",
+   "n_segment": 151,
+   "impaired_segment": 10,
+   "rate_segment_pct": 6.62,
+   "rate_rest_pct": 1.71,
+   "risk_multiple": 3.88,
+   "coupon_gap_pp": -1.07,
+   "p_value": 0.00036,
+   "verdict": "SIGNIFICANT"
+  },
+  {
+   "test": "H2b  Elevated-purpose set vs rest",
+   "n_segment": 816,
+   "impaired_segment": 31,
+   "rate_segment_pct": 3.8,
+   "rate_rest_pct": 1.6,
+   "risk_multiple": 2.37,
+   "coupon_gap_pp": -0.46,
+   "p_value": 4e-05,
+   "verdict": "SIGNIFICANT"
+  },
+  {
+   "test": "H2c  Purpose 'small_business' vs rest",
+   "n_segment": 125,
+   "impaired_segment": 2,
+   "rate_segment_pct": 1.6,
+   "rate_rest_pct": 1.78,
+   "risk_multiple": 0.9,
+   "coupon_gap_pp": 0.58,
+   "p_value": 1.0,
+   "verdict": "not significant"
+  },
+  {
+   "test": "H4   60-month term vs 36-month",
+   "n_segment": 3030,
+   "impaired_segment": 70,
+   "rate_segment_pct": 2.31,
+   "rate_rest_pct": 1.55,
+   "risk_multiple": 1.49,
+   "coupon_gap_pp": 3.9,
+   "p_value": 0.01052,
+   "verdict": "SIGNIFICANT"
+  },
+  {
+   "test": "H5   Owns outright vs rest",
+   "n_segment": 1353,
+   "impaired_segment": 34,
+   "rate_segment_pct": 2.51,
+   "rate_rest_pct": 1.67,
+   "risk_multiple": 1.51,
+   "coupon_gap_pp": -0.13,
+   "p_value": 0.035,
+   "verdict": "SIGNIFICANT"
+  },
+  {
+   "test": "H6   Joint application vs individual",
+   "n_segment": 1495,
+   "impaired_segment": 37,
+   "rate_segment_pct": 2.47,
+   "rate_rest_pct": 1.66,
+   "risk_multiple": 1.49,
+   "coupon_gap_pp": 0.86,
+   "p_value": 0.0334,
+   "verdict": "SIGNIFICANT"
+  }
+ ],
+ "watchlist": [
+  {
+   "loan_id": 8524,
+   "grade": "B",
+   "purpose": "major_purchase",
+   "homeownership": "RENT",
+   "verification": "Verified",
+   "balance": 40000.0,
+   "coupon": 11.99,
+   "status": "Late (31-120 days)",
+   "tier": "T1"
+  },
+  {
+   "loan_id": 3293,
+   "grade": "C",
+   "purpose": "medical",
+   "homeownership": "RENT",
+   "verification": "Verified",
+   "balance": 39032.0,
+   "coupon": 12.62,
+   "status": "Late (31-120 days)",
+   "tier": "T2"
+  },
+  {
+   "loan_id": 5762,
+   "grade": "A",
+   "purpose": "home_improvement",
+   "homeownership": "MORTGAGE",
+   "verification": "Verified",
+   "balance": 38973.0,
+   "coupon": 5.31,
+   "status": "Late (31-120 days)",
+   "tier": "T1"
+  },
+  {
+   "loan_id": 4989,
+   "grade": "B",
+   "purpose": "other",
+   "homeownership": "RENT",
+   "verification": "Verified",
+   "balance": 38516.0,
+   "coupon": 11.99,
+   "status": "Late (31-120 days)",
+   "tier": "T1"
+  },
+  {
+   "loan_id": 4599,
+   "grade": "A",
+   "purpose": "debt_consolidation",
+   "homeownership": "MORTGAGE",
+   "verification": "Verified",
+   "balance": 38329.0,
+   "coupon": 7.35,
+   "status": "Late (16-30 days)",
+   "tier": "T1"
+  },
+  {
+   "loan_id": 1521,
+   "grade": "C",
+   "purpose": "medical",
+   "homeownership": "RENT",
+   "verification": "Verified",
+   "balance": 35000.0,
+   "coupon": 16.02,
+   "status": "Late (31-120 days)",
+   "tier": "T2"
+  },
+  {
+   "loan_id": 3831,
+   "grade": "G",
+   "purpose": "house",
+   "homeownership": "MORTGAGE",
+   "verification": "Verified",
+   "balance": 34399.0,
+   "coupon": 30.94,
+   "status": "Late (16-30 days)",
+   "tier": "T1"
+  },
+  {
+   "loan_id": 4498,
+   "grade": "F",
+   "purpose": "debt_consolidation",
+   "homeownership": "OWN",
+   "verification": "Source Verified",
+   "balance": 34386.0,
+   "coupon": 29.69,
+   "status": "Late (31-120 days)",
+   "tier": "T2"
+  },
+  {
+   "loan_id": 225,
+   "grade": "B",
+   "purpose": "house",
+   "homeownership": "RENT",
+   "verification": "Verified",
+   "balance": 33701.0,
+   "coupon": 11.99,
+   "status": "Late (31-120 days)",
+   "tier": "T1"
+  },
+  {
+   "loan_id": 3832,
+   "grade": "D",
+   "purpose": "debt_consolidation",
+   "homeownership": "OWN",
+   "verification": "Verified",
+   "balance": 33514.0,
+   "coupon": 18.06,
+   "status": "In Grace Period",
+   "tier": "T2"
+  },
+  {
+   "loan_id": 7871,
+   "grade": "A",
+   "purpose": "debt_consolidation",
+   "homeownership": "MORTGAGE",
+   "verification": "Verified",
+   "balance": 32838.0,
+   "coupon": 7.97,
+   "status": "Late (16-30 days)",
+   "tier": "T1"
+  },
+  {
+   "loan_id": 2612,
+   "grade": "D",
+   "purpose": "home_improvement",
+   "homeownership": "OWN",
+   "verification": "Source Verified",
+   "balance": 31974.0,
+   "coupon": 18.06,
+   "status": "In Grace Period",
+   "tier": "T2"
+  },
+  {
+   "loan_id": 9219,
+   "grade": "C",
+   "purpose": "major_purchase",
+   "homeownership": "RENT",
+   "verification": "Verified",
+   "balance": 30473.0,
+   "coupon": 13.59,
+   "status": "In Grace Period",
+   "tier": "T2"
+  },
+  {
+   "loan_id": 4464,
+   "grade": "D",
+   "purpose": "credit_card",
+   "homeownership": "OWN",
+   "verification": "Source Verified",
+   "balance": 29360.0,
+   "coupon": 17.47,
+   "status": "Late (31-120 days)",
+   "tier": "T2"
+  },
+  {
+   "loan_id": 3787,
+   "grade": "C",
+   "purpose": "major_purchase",
+   "homeownership": "RENT",
+   "verification": "Source Verified",
+   "balance": 29310.0,
+   "coupon": 12.61,
+   "status": "Late (31-120 days)",
+   "tier": "T2"
+  },
+  {
+   "loan_id": 8536,
+   "grade": "D",
+   "purpose": "credit_card",
+   "homeownership": "OWN",
+   "verification": "Verified",
+   "balance": 29136.0,
+   "coupon": 21.45,
+   "status": "Late (16-30 days)",
+   "tier": "T2"
+  },
+  {
+   "loan_id": 1102,
+   "grade": "D",
+   "purpose": "medical",
+   "homeownership": "RENT",
+   "verification": "Source Verified",
+   "balance": 28795.0,
+   "coupon": 21.85,
+   "status": "In Grace Period",
+   "tier": "T2"
+  },
+  {
+   "loan_id": 9441,
+   "grade": "D",
+   "purpose": "home_improvement",
+   "homeownership": "OWN",
+   "verification": "Verified",
+   "balance": 28703.0,
+   "coupon": 17.09,
+   "status": "Late (31-120 days)",
+   "tier": "T2"
+  },
+  {
+   "loan_id": 9596,
+   "grade": "D",
+   "purpose": "debt_consolidation",
+   "homeownership": "OWN",
+   "verification": "Source Verified",
+   "balance": 28165.0,
+   "coupon": 21.45,
+   "status": "Late (31-120 days)",
+   "tier": "T2"
+  },
+  {
+   "loan_id": 3932,
+   "grade": "C",
+   "purpose": "debt_consolidation",
+   "homeownership": "OWN",
+   "verification": "Source Verified",
+   "balance": 26561.0,
+   "coupon": 15.05,
+   "status": "Late (31-120 days)",
+   "tier": "T2"
+  },
+  {
+   "loan_id": 972,
+   "grade": "D",
+   "purpose": "house",
+   "homeownership": "OWN",
+   "verification": "Verified",
+   "balance": 26249.0,
+   "coupon": 20.0,
+   "status": "In Grace Period",
+   "tier": "T1"
+  },
+  {
+   "loan_id": 5794,
+   "grade": "B",
+   "purpose": "debt_consolidation",
+   "homeownership": "MORTGAGE",
+   "verification": "Verified",
+   "balance": 25360.0,
+   "coupon": 11.99,
+   "status": "In Grace Period",
+   "tier": "T1"
+  },
+  {
+   "loan_id": 38,
+   "grade": "C",
+   "purpose": "car",
+   "homeownership": "MORTGAGE",
+   "verification": "Verified",
+   "balance": 23455.0,
+   "coupon": 15.04,
+   "status": "In Grace Period",
+   "tier": "T2"
+  },
+  {
+   "loan_id": 5109,
+   "grade": "A",
+   "purpose": "major_purchase",
+   "homeownership": "RENT",
+   "verification": "Verified",
+   "balance": 21600.0,
+   "coupon": 7.34,
+   "status": "Late (31-120 days)",
+   "tier": "T1"
+  },
+  {
+   "loan_id": 4053,
+   "grade": "C",
+   "purpose": "house",
+   "homeownership": "MORTGAGE",
+   "verification": "Verified",
+   "balance": 20491.0,
+   "coupon": 12.61,
+   "status": "Late (16-30 days)",
+   "tier": "T1"
+  },
+  {
+   "loan_id": 1178,
+   "grade": "B",
+   "purpose": "debt_consolidation",
+   "homeownership": "MORTGAGE",
+   "verification": "Verified",
+   "balance": 20431.0,
+   "coupon": 11.99,
+   "status": "In Grace Period",
+   "tier": "T1"
+  },
+  {
+   "loan_id": 4020,
+   "grade": "D",
+   "purpose": "debt_consolidation",
+   "homeownership": "OWN",
+   "verification": "Not Verified",
+   "balance": 20000.0,
+   "coupon": 21.85,
+   "status": "Late (31-120 days)",
+   "tier": "T2"
+  },
+  {
+   "loan_id": 8666,
+   "grade": "D",
+   "purpose": "debt_consolidation",
+   "homeownership": "OWN",
+   "verification": "Verified",
+   "balance": 19608.0,
+   "coupon": 20.39,
+   "status": "In Grace Period",
+   "tier": "T2"
+  },
+  {
+   "loan_id": 5514,
+   "grade": "D",
+   "purpose": "house",
+   "homeownership": "RENT",
+   "verification": "Source Verified",
+   "balance": 19424.0,
+   "coupon": 21.45,
+   "status": "In Grace Period",
+   "tier": "T1"
+  },
+  {
+   "loan_id": 1724,
+   "grade": "F",
+   "purpose": "credit_card",
+   "homeownership": "OWN",
+   "verification": "Verified",
+   "balance": 19367.0,
+   "coupon": 28.72,
+   "status": "Late (16-30 days)",
+   "tier": "T2"
+  },
+  {
+   "loan_id": 9955,
+   "grade": "D",
+   "purpose": "house",
+   "homeownership": "RENT",
+   "verification": "Source Verified",
+   "balance": 19202.0,
+   "coupon": 20.0,
+   "status": "In Grace Period",
+   "tier": "T1"
+  },
+  {
+   "loan_id": 5131,
+   "grade": "A",
+   "purpose": "home_improvement",
+   "homeownership": "RENT",
+   "verification": "Verified",
+   "balance": 19010.0,
+   "coupon": 6.71,
+   "status": "Late (31-120 days)",
+   "tier": "T1"
+  },
+  {
+   "loan_id": 1004,
+   "grade": "B",
+   "purpose": "debt_consolidation",
+   "homeownership": "MORTGAGE",
+   "verification": "Verified",
+   "balance": 18964.0,
+   "coupon": 9.93,
+   "status": "Late (16-30 days)",
+   "tier": "T1"
+  },
+  {
+   "loan_id": 9416,
+   "grade": "C",
+   "purpose": "debt_consolidation",
+   "homeownership": "OWN",
+   "verification": "Verified",
+   "balance": 18170.0,
+   "coupon": 14.08,
+   "status": "In Grace Period",
+   "tier": "T2"
+  },
+  {
+   "loan_id": 6713,
+   "grade": "B",
+   "purpose": "house",
+   "homeownership": "OWN",
+   "verification": "Source Verified",
+   "balance": 18000.0,
+   "coupon": 9.92,
+   "status": "Late (31-120 days)",
+   "tier": "T1"
+  },
+  {
+   "loan_id": 9056,
+   "grade": "A",
+   "purpose": "home_improvement",
+   "homeownership": "MORTGAGE",
+   "verification": "Verified",
+   "balance": 15770.0,
+   "coupon": 7.34,
+   "status": "In Grace Period",
+   "tier": "T1"
+  },
+  {
+   "loan_id": 8396,
+   "grade": "C",
+   "purpose": "house",
+   "homeownership": "RENT",
+   "verification": "Not Verified",
+   "balance": 15032.0,
+   "coupon": 16.02,
+   "status": "In Grace Period",
+   "tier": "T1"
+  },
+  {
+   "loan_id": 2887,
+   "grade": "D",
+   "purpose": "moving",
+   "homeownership": "RENT",
+   "verification": "Not Verified",
+   "balance": 14538.0,
+   "coupon": 19.03,
+   "status": "Late (16-30 days)",
+   "tier": "T2"
+  },
+  {
+   "loan_id": 2396,
+   "grade": "B",
+   "purpose": "major_purchase",
+   "homeownership": "RENT",
+   "verification": "Not Verified",
+   "balance": 13945.0,
+   "coupon": 11.99,
+   "status": "In Grace Period",
+   "tier": "T2"
+  },
+  {
+   "loan_id": 6407,
+   "grade": "C",
+   "purpose": "major_purchase",
+   "homeownership": "RENT",
+   "verification": "Verified",
+   "balance": 13617.0,
+   "coupon": 13.59,
+   "status": "In Grace Period",
+   "tier": "T2"
+  }
+ ]
+}

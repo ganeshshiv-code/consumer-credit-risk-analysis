@@ -1,0 +1,4 @@
+homeownership,loans,impaired,impaired_rate_pct,ci_low,ci_high,avg_coupon_pct,avg_income_usd,balance_musd
+OWN,1353,34.0,2.51,1.8,3.49,12.31,71279.0,18.6
+RENT,3858,76.0,1.97,1.58,2.46,12.92,67526.0,49.3
+MORTGAGE,4789,68.0,1.42,1.12,1.8,12.06,91270.0,76.8

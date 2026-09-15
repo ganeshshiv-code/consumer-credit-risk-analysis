@@ -1,193 +1,235 @@
-# Uncompensated Risk in a $163M Consumer Loan Book
+# Finding Risk That Nobody Charged For: A $163M Loan Book
 
-**A credit-risk analysis of 10,000 real LendingClub personal loans — finding 138bps of net yield the pricing engine was giving away.**
+I analysed 10,000 real LendingClub personal loans to answer one question: is this lender taking on risk it forgot to charge for? It is. I found about $2 million a year of it.
+
+**Tools:** SQL (DuckDB), Python (pandas, scipy, statsmodels), HTML/JS dashboard
 
 ---
 
-## Executive summary
+## Quick summary
 
-A $163.6M unsecured personal-loan vintage was underwritten in Q1 2018. Four months in, 1.78% of accounts have already missed a payment. That number is unremarkable on its own. What it hides is *where* the misses sit.
+A lender gave out $163.6 million in personal loans in the first three months of 2018. That is 10,000 loans. Four months later, 1.78% of them had already missed a payment.
 
-The credit grade works: impairment rises monotonically from 0.77% at grade A to 5.07% at grade E, and the coupon rises faster, so the riskiest grades are the **most** profitable assets in the book. The problem is elsewhere. Three borrower attributes that the grade does not capture — **income-verification status in prime grades, loan purpose, and outright home ownership** — carry statistically significant risk that is priced at, or below, the book average.
+On its own, 1.78% is a normal number. Nothing looks wrong. But I wanted to know *which* loans were missing payments, and whether the lender had charged enough interest on those loans to cover the losses.
 
-The effect compounds. Loans carrying two or more of these attributes impair at **4.00%** versus **1.48%** for unflagged loans, while their average coupon *falls* from 13.13% to 10.09%.
+Here is what I found. The lender's own credit grade (the A to G score it gives each borrower) works fine. Grade A loans go bad 0.77% of the time and grade E loans go bad 5.07% of the time, and the interest rate goes up faster than the risk does. So the grade is doing its job.
+
+The problem is three things the grade does not look at:
+
+1. Whether the lender checked the borrower's income, in the top credit grades
+2. What the borrower said the loan was for
+3. Whether the borrower owns their home outright, with no mortgage
+
+All three predict missed payments. None of them change the interest rate. When a loan has two or more of them, it goes bad 4.00% of the time instead of 1.48%, and the lender actually charges it a *lower* rate.
 
 ![Risk rises while price falls](outputs/charts/01_risk_vs_price.png)
 
-**27.5% of accounts carry 44.1% of the modelled loss.** Declining the two segments that fail to cover their own cost of capital, and repricing the rest, lifts risk-adjusted net yield from **4.81% to 6.19% — +138bps, worth $2.0M a year on this book and $6.9M on a $500M origination programme.**
+27.5% of the loans are causing 44.1% of the losses. If the lender stopped making the two worst kinds of loans and charged more for a third kind, its profit margin would go from 4.81% to 6.19%. That is worth about $2.0 million a year on this book, or $6.9 million if they lend $500 million a year.
 
-The tier ranking that drives that recommendation held in all 16 assumption scenarios tested.
-
----
-
-## 1. Business problem
-
-> *"Our grade-level loss rates are within tolerance and our pricing model is performing as designed. So why is blended net yield running below plan?"*
-
-This is the question a portfolio analyst actually gets asked, and the two halves of it are both true at once. A risk-based pricing engine can be working perfectly *within* its own dimensions and still lose money, because it can only price what it measures.
-
-The analysis therefore does not ask "is the grade wrong?" It asks a narrower, more useful question:
-
-**Which borrower attributes predict early default but do not move the price?**
-
-Anything in that set is risk the book is carrying for free. The deliverable is a list of those attributes, the money attached to each, and an underwriting overlay the credit committee can approve on one page.
-
-**Scope note.** The data is real; the institutional framing is an analytical exercise. I take the position of an analyst at the firm holding this book, because a credit finding is only worth something when it is expressed as a decision and a dollar amount.
+I tested that conclusion against 16 different sets of assumptions. It held up in all of them.
 
 ---
 
-## 2. Hypotheses
+## 1. The business problem
 
-Stated and pre-registered before the analysis, so that rejections count as results rather than as dead ends. Four of the six failed, and two of the failures were more informative than the successes.
+Imagine you work for this lender and your boss asks you this:
 
-| # | Hypothesis | Prior reasoning | Result |
+> "Our loss rates look fine for every credit grade. Our pricing model is doing what we built it to do. So why is our overall profit margin below target?"
+
+Both halves of that can be true at the same time. A pricing model can only charge for risk that it actually measures. If there is risk sitting in a field the model never looks at, the model will keep saying everything is fine while the money quietly leaks out.
+
+So I did not try to prove the credit grade was wrong. I asked a smaller, more useful question:
+
+**Which things about a borrower predict missed payments but do NOT change the interest rate they are charged?**
+
+Anything on that list is risk the lender is carrying for free. My job was to find those things, work out how much money each one costs, and turn it into a rule the credit team could actually apply.
+
+**One thing to be clear about:** the data is real. The company in this story is not. I wrote it as if I worked there, because a credit finding is only useful when you turn it into a decision and a dollar amount. Everything I claim comes from the data.
+
+---
+
+## 2. What I expected to find
+
+Before I started, I wrote down six things I believed and what I would need to see to prove or disprove each one. I did this first on purpose, so I could not quietly drop the ones that did not work out.
+
+Four of the six turned out to be wrong. Two of those wrong answers taught me more than the right ones.
+
+| # | What I expected | Why I thought so | What actually happened |
 |---|---|---|---|
-| **H1** | Income verification reduces risk | Verified income is better information, so verified loans should perform better | **Rejected, and reversed** — verified loans impair **2.96x** more in prime grades (p=0.0004) and show no effect below (p=1.00) |
-| **H2** | Loan purpose carries risk the price ignores | Purpose proxies for financial pressure; the pricing engine barely uses it | **Confirmed** — elevated-purpose loans impair 2.37x more (p=0.00004) at a coupon 46bps *below* the book |
-| **H3** | Higher debt-to-income means higher risk | The standard affordability metric | **Rejected, inverted** — the *lowest* DTI quintile impairs most (2.51%); DTI odds ratio 0.98, p=0.0019 |
-| **H4** | 60-month loans are riskier than 36-month | Longer exposure, weaker borrowers | **Rejected as a mix effect** — significant alone (p=0.011), vanishes once grade is controlled (OR 0.90, p=0.53). The grade already prices it |
-| **H5** | Outright home ownership is a strength | No mortgage means lower fixed obligations | **Rejected, reversed** — outright owners impair 1.51x more than mortgage holders (p=0.035; OR 1.55 multivariate) |
-| **H6** | Joint applications reduce risk | Two incomes supporting one loan | **Rejected statistically, but no action taken** — joint loans impair 1.49x more (p=0.033), yet earn +5.72% net yield. Significant ≠ actionable |
+| **H1** | Checking a borrower's income makes the loan safer | If you verify income, you know more, so you should lend better | **Wrong, and backwards.** In the top grades, verified loans went bad 2.96x MORE often (p=0.0004). In lower grades it made no difference at all (p=1.00) |
+| **H2** | What the loan is for predicts risk, and the price ignores it | Someone borrowing for a medical bill is under more pressure than someone refinancing a credit card | **Right.** The riskier purposes went bad 2.37x more often (p=0.00004), and were charged 46bps LESS than average |
+| **H3** | Borrowers with more debt relative to income are riskier | This is the standard affordability check every lender uses | **Wrong, and backwards.** The borrowers with the LEAST debt went bad most often (2.51%). Odds ratio 0.98, p=0.0019 |
+| **H4** | 5-year loans are riskier than 3-year loans | More time to run into trouble | **Wrong, it was just a mix-up.** It looked true at first (p=0.011) but disappeared once I compared loans within the same credit grade (p=0.53). The grade already handles it |
+| **H5** | Owning your home outright is a good sign | No mortgage payment means more spare cash each month | **Wrong, and backwards.** Outright owners went bad 1.51x more often than people with a mortgage (p=0.035) |
+| **H6** | Two people on one loan is safer than one | Two incomes backing the same payment | **Wrong, but I did not act on it.** Joint loans did go bad 1.49x more often (p=0.033). But they are already charged enough to cover it (+5.72% margin), so there is nothing to fix |
 
-H6 is the discipline point of the project. A significant risk finding that is already adequately priced is not a problem to fix. Three of the six hypotheses produced real findings; the rest are reported as failures rather than quietly dropped.
+That last row matters to me. Finding something statistically significant is not the same as finding a problem. Joint applications are riskier, and the lender is already being paid for that risk. Changing anything there would cost money, not save it.
 
 ---
 
-## 3. Data
+## 3. The data I used
 
-**Source:** LendingClub loan-level originations, published as `loans_full_schema` in the [openintro](https://www.openintro.org/data/index.php?data=loans_full_schema) R package, mirrored in [Rdatasets](https://github.com/vincentarelbundock/Rdatasets).
+**Where it came from:** Real LendingClub loan records, published as `loans_full_schema` by [OpenIntro](https://www.openintro.org/data/index.php?data=loans_full_schema) and mirrored on [Rdatasets](https://github.com/vincentarelbundock/Rdatasets).
 
-This is **real lending data**, not a simulation: 10,000 loans issued January–March 2018, 55 fields covering borrower credit bureau attributes at application, loan terms, and repayment status at the observation date.
+This is real lending data. I did not make up or simulate any of it.
 
 | | |
 |---|---|
-| Loans | 10,000 |
-| Originated | $163.6M |
-| Outstanding | $144.6M |
-| Vintage | Jan–Mar 2018 |
-| Seasoning at observation | ~4–5 scheduled payments |
-| Weighted-average coupon | 12.66% |
-| Grade mix | A 24.6% · B 30.4% · C 26.5% · D 14.5% · E–G 4.1% |
+| Number of loans | 10,000 |
+| Total lent out | $163.6M |
+| Still owed | $144.6M |
+| When they were issued | January to March 2018 |
+| How far along they are | About 4 to 5 monthly payments in |
+| Average interest rate | 12.66% |
+| Credit grade mix | A 24.6% · B 30.4% · C 26.5% · D 14.5% · E–G 4.1% |
 
-### Outcome definition
+There are 55 columns. They cover the borrower's credit history at the time they applied, the terms of the loan, and whether they are currently paying on time.
 
-The book is four months old, so ultimate default is unobservable. The analysable outcome is **early impairment** — any loan that has already missed a payment:
+### How I decided what counts as a "bad" loan
+
+The loans are only four months old. Nobody has properly defaulted yet, because that takes a year or more. So I could not measure defaults.
+
+What I could measure is whether a borrower has **already missed a payment**. In the data that means the loan status is one of these:
 
 ```
-impaired = loan_status IN ('In Grace Period', 'Late (16-30 days)',
-                           'Late (31-120 days)', 'Charged Off')
+In Grace Period       (1 to 15 days late)
+Late (16-30 days)
+Late (31-120 days)
+Charged Off           (the lender has given up on it)
 ```
 
-178 loans (1.78%), $3.00M of principal (2.07%).
+That is 178 loans, or 1.78%. In money, $3.00 million of what is still owed, or 2.07%.
 
-Early-stage delinquency is the standard early-warning metric for a fresh vintage precisely because waiting for charge-offs means waiting two years to learn something you needed at origination.
+Lenders watch this number closely on new loans, and there is a good reason. If you wait for real defaults, you find out you underwrote badly two years after you did it. Missing a payment in the first few months is the earliest warning you get.
 
-### Honest limitations
+### Things that are wrong with this analysis
 
-A portfolio project that hides its weaknesses is not worth reading. This one has four:
+I want to be upfront about the weak points, because I would rather explain them myself than have someone find them.
 
-1. **Short seasoning.** Four months of performance predicts the *ranking* of segments well and the *level* of lifetime loss poorly. Every absolute loss number here is scaled by an assumption (§7), and the recommendation is built to survive that (§7.3).
-2. **Survivorship in the platform's own funnel.** These are funded loans. Applicants LendingClub declined are invisible, so every effect measured is conditional on having passed their underwriting.
-3. **Small segments.** `house` purpose is 151 loans and 10 impairments. Every rate in this repo carries a Wilson 95% interval for that reason, and no recommendation rests on a segment whose interval crosses the portfolio average.
-4. **One vintage, one macro environment.** Q1 2018 was a benign credit period. The *direction* of these effects should replicate; the magnitudes would need a multi-vintage test.
+**1. The loans are young.** Four months of payment history tells you a lot about which groups of borrowers are worse than others. It tells you very little about how much money will actually be lost in total. So every dollar figure in this project depends on an assumption I had to make (I explain it in section 4). I built the recommendation so that it does not depend on that assumption being right, and I show that in section 7.
+
+**2. I only see approved loans.** Everyone LendingClub turned down is invisible to me. So everything I found is true *among people who already passed their checks*, which is not the same as being true of everyone who applies.
+
+**3. Some groups are small.** My biggest finding about loan purpose is based on 151 loans with 10 missed payments. If two of those borrowers had paid on time, the number would look very different. That is why I put a confidence range on every percentage in this project, and why I did not base any recommendation on a group whose range overlaps the portfolio average.
+
+**4. It is one time period, and an easy one.** Early 2018 was a good economy. I would expect the *direction* of these findings to hold in a recession, but not the exact sizes. Checking that would need several years of loans.
 
 ---
 
-## 4. Method
+## 4. How I did it
 
-Two layers, deliberately separated.
+I split the work into two parts on purpose.
 
-**SQL (DuckDB)** does the portfolio arithmetic — segmentation, roll rates, the economics, the decision tiers. Every business number in this README traces to a query in `sql/`. Wilson confidence intervals are implemented as SQL macros so that no rate is ever reported bare.
+**SQL (DuckDB)** does all the counting and the money maths. Every business number in this README comes from a query you can find in the `sql/` folder and run yourself.
 
-**Python** does the things SQL should not: significance testing, multivariate control, sensitivity analysis, and chart export.
+**Python** does the statistics: testing whether a difference is real or just luck, checking whether a finding survives once you account for credit grade, and stress-testing the assumptions.
 
 ```bash
 pip install -r requirements.txt
 
-python python/01_build_db.py         # CSV -> DuckDB, cleaning + features
-python python/02_run_sql.py          # run every sql/ file, print + save results
-python python/03_statistical_tests.py # Fisher exact, logistic regression, interaction
-python python/04_sensitivity.py       # do the conclusions survive the assumptions?
-python python/05_charts.py            # export figures
+python python/01_build_db.py          # load the CSV into a database, clean it
+python python/02_run_sql.py           # run every SQL file, save the results
+python python/03_statistical_tests.py # significance tests and regression
+python python/04_sensitivity.py       # test the conclusions against 16 scenarios
+python python/05_charts.py            # make the charts
 ```
 
-### The economics
+### How I worked out whether a group of loans makes money
 
-A segment is only a problem if it fails to cover what it costs to hold:
+A group of loans is only a problem if it does not earn enough to cover what it costs to hold. So for every group I calculated:
 
 ```
-net yield = coupon − cost of funds − servicing − annualised expected loss
+profit margin = interest charged
+              − cost of borrowing the money
+              − cost of running the loans
+              − expected losses
 ```
 
-| Assumption | Value | Basis |
+These are the numbers I used for the last three:
+
+| Assumption | Value | Where it comes from |
 |---|---|---|
-| Roll to charge-off — grace / 16-30 / 31-120 dpd | 30% / 45% / 70% | Industry convention, unsecured consumer instalment |
-| Loss given default | 85% | Unsecured, ~15% recovery |
-| Cost of funds | 3.0% | 2018 rate environment |
-| Servicing + platform | 1.0% | Marketplace investor fee |
-| Lifetime charge-off anchor | 9.0% | Used to season a 4-month book |
+| How often a late loan ends up written off (grace period / 16-30 days / 31-120 days) | 30% / 45% / 70% | Standard industry figures for unsecured personal loans |
+| How much is lost when a loan is written off | 85% | These loans have no collateral, so you recover about 15% |
+| Cost of borrowing the money | 3.0% | Roughly what funding cost in 2018 |
+| Cost of running the loans | 1.0% | LendingClub's investor fee |
+| Total losses expected over the loan's life | 9.0% | See below |
 
-The seasoning anchor deserves a flag. It converts observed early impairment into a lifetime loss estimate through a **single portfolio-level scalar (k = 8.81)**. Because the same scalar multiplies every loan, it sets the absolute level of loss and never the ranking between segments — which is the only property the recommendation depends on. §7.3 demonstrates this rather than asserting it.
+**About that last one.** These loans are only four months old, so they have not lost most of the money they are eventually going to lose. To estimate a full lifetime loss, I multiplied the losses I can see by a single number (8.81) chosen so the whole portfolio comes out at 9% lifetime losses, which is reasonable for this mix of credit grades.
+
+That multiplier is an assumption, not something I measured, and I want to be clear about what it does and does not affect. Because it is one number applied to every single loan equally, it changes how big the losses look, but it cannot change which groups look worse than which other groups. Section 7 shows this rather than just claiming it.
 
 ---
 
-## 5. Findings
+## 5. What I found
 
-### Finding 1 — Income verification means the opposite thing in prime and subprime
+### Finding 1: Checking someone's income means opposite things depending on their credit grade
 
 ![The verification paradox](outputs/charts/02_verification_paradox.png)
 
-Within grade A, income-verified borrowers impair at **2.56%** against **0.47%** for everyone else — **5.4x the risk**, Fisher exact p=0.0006. They pay **13bps** more for it.
+Among grade A borrowers (the safest ones), the loans where LendingClub verified the income went bad **2.56%** of the time. The ones where it did not verify went bad **0.47%** of the time.
 
-The effect is confined to the top of the book. In grades C and D it disappears entirely, and in D it reverses. Tested formally, the verification × credit-band interaction has an **odds ratio of 3.3 (p=0.0007)**, while verification as a standalone main effect is not significant (p=0.13) — the two opposing effects cancel out when averaged.
+That is more than five times the risk. If there were really no difference between the two groups, a gap this big would turn up about once in every 1,800 tries (p=0.0006). And for all that extra risk, those borrowers were charged 13 basis points more. That is 0.13%, which is basically nothing.
 
-**The mechanism matters more than the coefficient.** Verification is not randomly assigned; the platform chooses whom to verify. In the prime band, being asked to document income is a signal that something in the application did not reconcile on its own — variable compensation, self-employment, thin documentation. The verification *outcome* is clean, which is why the loan is graded A. The verification *trigger* is the information, and the grade never sees it.
+What is strange is that this only happens at the top. In grades C and D the effect disappears completely, and in grade D it actually flips the other way.
 
-Below prime, applicants are being verified as a matter of course, so the trigger carries no signal — exactly what the data shows.
+I checked whether that flip was real by testing the two together in one model. It is: the difference between the two credit bands has an odds ratio of 3.3 with p=0.0007. Interestingly, if you just test "does verification predict risk" across the whole book, you get nothing (p=0.13), because the two opposite effects cancel each other out. You only see it if you split the book first.
 
-A grade-A loan at a 5.31% coupon in this book is already 31–120 days late. That is a loan the pricing engine believed was among the safest assets it had.
+**Why I think this happens.** LendingClub chooses who to verify. It is not random. So being asked to prove your income is itself a signal that something in your application did not add up on its own. Maybe your income changes month to month, maybe you work for yourself, maybe your paperwork was thin.
 
-### Finding 2 — Loan purpose is risk information sitting unused
+Then you prove your income, it checks out, and you get graded A. The *result* of the check is clean. But the *reason they asked in the first place* is information, and nobody is using it.
+
+In lower credit grades, almost everyone gets verified as routine, so being asked tells you nothing. That is exactly what the data shows.
+
+One loan in this book makes the point well: grade A, interest rate of 5.31%, and it is already 31 to 120 days late. The pricing model thought that was one of the safest loans it had.
+
+### Finding 2: What the loan is for predicts risk, and nobody is charging for it
 
 ![Purpose risk against price](outputs/charts/03_purpose_quadrant.png)
 
-Every purpose below the horizontal line is priced under the book average. Several of them sit well to the right of it.
+Everything below the horizontal line is charged less than the book average. Several of those are well to the right, meaning they are riskier than average.
 
-| Purpose | Loans | Impairment | 95% CI | vs book | Coupon vs book |
+| What the loan is for | Loans | Missed payments | Range I am confident in | vs the book | Interest vs the book |
 |---|---|---|---|---|---|
-| house | 151 | **6.62%** | 3.64–11.76% | 3.7x | **−1.29pp** |
-| medical | 162 | 3.70% | 1.71–7.84% | 2.1x | −0.51pp |
-| car | 131 | 3.05% | 1.19–7.59% | 1.7x | −0.62pp |
-| major purchase | 303 | 2.97% | 1.57–5.55% | 1.7x | −0.69pp |
-| credit card | 2,249 | 1.07% | 0.72–1.58% | 0.6x | −1.23pp |
+| A house purchase | 151 | **6.62%** | 3.64% – 11.76% | 3.7x riskier | **1.29% cheaper** |
+| Medical bills | 162 | 3.70% | 1.71% – 7.84% | 2.1x riskier | 0.51% cheaper |
+| A car | 131 | 3.05% | 1.19% – 7.59% | 1.7x riskier | 0.62% cheaper |
+| A big purchase | 303 | 2.97% | 1.57% – 5.55% | 1.7x riskier | 0.69% cheaper |
+| Paying off a credit card | 2,249 | 1.07% | 0.72% – 1.58% | 0.6x, so safer | 1.23% cheaper |
 
-Pooled into a single **elevated-purpose** set (house, medical, car, major purchase, moving — 816 loans), impairment is **3.80% vs 1.60%**, p=0.00004, and the effect survives multivariate control at **odds ratio 2.39 (p<0.0001)** — the strongest non-grade driver in the model.
+I grouped the risky ones together (house, medical, car, big purchase and moving, 816 loans in total). As a group they go bad **3.80%** of the time against **1.60%** for everything else. If there were no real difference, a gap that size would turn up about once in every 25,000 tries (p=0.00004).
 
-`credit_card` is the mirror image and equally useful: 0.6x the risk, and it is *also* priced below the book. Refinancing a revolving balance into a fixed instalment is a deleveraging act by a borrower who is managing their position. That segment should be grown, not just left alone.
+I also checked whether this was just a side effect of those borrowers having worse credit grades. It is not. Even comparing loans within the same grade, the odds ratio is 2.39 with p below 0.0001. It is the strongest thing I found outside the grade itself.
 
-`home_improvement` (2.21%, CI 1.34–3.61%) sits close enough to the book average that its interval overlaps. It goes on the watchlist, not in the overlay.
+The credit card row is just as useful, and points the other way. Those loans are the *safest* in the book at 0.6x the average risk, and they are also charged less than average. Someone moving a credit card balance onto a fixed monthly payment is usually taking control of their finances, not losing control. The lender should want more of those, not just leave them alone.
 
-### Finding 3 — Debt-to-income is pointing the wrong way
+Home improvement loans sit at 2.21%, with a confidence range of 1.34% to 3.61%. That range overlaps the book average, so I cannot say for sure they are worse. I left them out of my recommendations and put them on a watch list instead.
 
-| DTI quintile | Range | Loans | Impairment | 95% CI |
+### Finding 3: The debt-to-income check is pointing the wrong way
+
+Debt-to-income is the standard affordability test. You add up what someone owes each month and divide it by what they earn. Higher should mean riskier.
+
+I split the borrowers into five equal groups from lowest to highest:
+
+| Group | Debt-to-income | Loans | Missed payments | Range I am confident in |
 |---|---|---|---|---|
-| 1 | 0.0–9.7% | 1,996 | **2.51%** | 1.91–3.29% |
-| 2 | 9.7–15.1% | 1,995 | 1.30% | 0.89–1.90% |
-| 3 | 15.1–20.3% | 1,995 | 1.20% | 0.81–1.78% |
-| 4 | 20.3–27.0% | 1,995 | 1.95% | 1.43–2.66% |
-| 5 | 27.0–469% | 1,995 | 1.90% | 1.39–2.60% |
+| 1 (lowest debt) | 0.0% – 9.7% | 1,996 | **2.51%** | 1.91% – 3.29% |
+| 2 | 9.7% – 15.1% | 1,995 | 1.30% | 0.89% – 1.90% |
+| 3 | 15.1% – 20.3% | 1,995 | 1.20% | 0.81% – 1.78% |
+| 4 | 20.3% – 27.0% | 1,995 | 1.95% | 1.43% – 2.66% |
+| 5 (highest debt) | 27.0% – 469% | 1,995 | 1.90% | 1.39% – 2.60% |
 
-The lowest-DTI quintile — the borrowers an affordability screen would rank safest — impairs at twice the rate of the middle. Multivariate, DTI's odds ratio is **0.98 per point, p=0.0019**: significant, and pointing the wrong way.
+The borrowers with the least debt, the ones an affordability check would call safest, missed payments twice as often as the middle group. When I tested it properly the odds ratio came out at 0.98 per point with p=0.0019. It is a real effect and it runs the opposite way to what everyone assumes.
 
-The likely reading is that low measured DTI in this population is not financial strength but a **thin credit file**. A borrower with little existing debt has little repayment history to have been graded on. The U-shape is what a screen would look like if it were conflating "no obligations" with "proven ability to meet obligations."
+My best guess is that low debt here does not mean the person is financially strong. It means they have a **thin credit file**. They have not borrowed much, so there is not much history to judge them on. The check is treating "has no debts" and "has proved they can handle debts" as the same thing, and they are not.
 
-This does not become a recommendation — it becomes a warning against the intuitive one. Any proposal to tighten the DTI cap would have made this book worse.
+I did not turn this into a recommendation. I turned it into a warning. If someone on the credit team had suggested tightening the debt-to-income limit, this book shows it would have made things worse.
 
-### Finding 4 — The grade is working; do not touch it
+### Finding 4: The credit grade is working, so leave it alone
 
 ![Segment league table](outputs/charts/04_segment_league_table.png)
 
-| Grade | Loans | Impairment | Coupon | Annual loss | Net yield |
+| Grade | Loans | Missed payments | Interest charged | Expected loss | Profit margin |
 |---|---|---|---|---|---|
 | A | 2,459 | 0.77% | 6.69% | 1.70% | **+0.99%** |
 | B | 3,037 | 1.09% | 10.52% | 2.16% | +4.36% |
@@ -195,178 +237,157 @@ This does not become a recommendation — it becomes a warning against the intui
 | D | 1,446 | 3.39% | 19.16% | 7.42% | +7.74% |
 | E | 335 | 5.07% | 25.23% | 10.15% | **+11.07%** |
 
-Grade E impairs **6.6x** more than grade A and earns **11 times the net yield**. Read the impairment column alone and you would cut exactly the wrong end of the book.
+Grade E borrowers miss payments 6.6 times as often as grade A borrowers, and grade E loans make eleven times as much money. If you looked at the missed payment column on its own you would cut grade E, which is exactly the wrong end of the book to cut.
 
-Grade A is the weakest asset the portfolio holds, at +0.99%, because a 6.69% coupon leaves 269bps to absorb funding, servicing and loss. It has almost no margin for an underwriting error — which is what makes Finding 1 expensive rather than merely interesting.
+Grade A is actually the weakest thing the lender owns. At 6.69% interest, once you take off 4% for funding and running costs, there is only 2.69% left to absorb any losses at all. That is why finding 1 is expensive and not just interesting. Grade A has almost no room for a mistake.
 
-*(Grades F and G, at 58 and 12 loans, are too small to read. They are excluded from every conclusion here.)*
+I left grades F and G out of all of this. There are only 58 and 12 loans in them, which is far too few to say anything reliable.
 
-### Finding 5 — The flags compound
+### Finding 5: These problems stack up
 
-| Uncompensated-risk flags | Loans | % of balance | Impairment | Coupon | % of modelled loss | Concentration |
-|---|---|---|---|---|---|---|
-| None | 7,254 | 72.4% | 1.48% | 12.79% | 55.9% | 0.77 |
-| One | 2,446 | 24.6% | 2.41% | 11.64% | 37.0% | **1.51** |
-| Two or more | 300 | 3.1% | 4.00% | 10.04% | 7.1% | **2.31** |
+| Warning signs on the loan | Loans | Share of money lent | Missed payments | Interest charged | Share of losses |
+|---|---|---|---|---|---|
+| None | 7,254 | 72.4% | 1.48% | 13.13% | 55.9% |
+| One | 2,446 | 24.6% | 2.41% | 11.59% | 37.0% |
+| Two or more | 300 | 3.1% | 4.00% | 10.09% | 7.1% |
 
-Risk climbs, price falls, and loss concentration triples. The flags are not redundant with each other, and none of them is in the price.
+Risk goes up. Price goes down. And the share of losses per dollar lent triples from the first row to the last.
 
----
-
-## 6. Recommendations
-
-Three tiers, each with an owner and a decision, not an observation.
-
-### Tier 1 — Decline (1,026 loans · $18.3M · net yield −0.18%)
-
-**Rule:** `loan_purpose = 'house'` **OR** (`grade IN ('A','B')` **AND** `income_verified = 'Verified'`)
-
-These segments do not cover their own cost of capital. The book pays to own them.
-
-*Caveat, stated plainly:* Tier 1 is negative under the base assumptions and in 8 of 12 single-assumption stress scenarios. Under the most benign set (LGD 70%, funding 2.0%) it turns marginally positive at +0.8%. It is the worst tier in **every** scenario tested; it is a *loss-making* tier in most of them. If the credit committee prefers the softer action, Tier 1 reprices at +600bps instead of declining — the pricing math is in `sql/04_decision_framework.sql`.
-
-### Tier 2 — Reprice +400bps (1,720 loans · $21.6M · net yield +2.51%)
-
-**Rule:** remaining elevated-purpose loans (medical, car, major purchase, moving) **OR** `homeownership = 'OWN'`
-
-Profitable, but earning 365bps less than Core for more risk. Price the risk rather than refusing it.
-
-### Core — Grow (7,254 loans · $104.6M · net yield +6.16%)
-
-Actively expand `credit_card` refinance, mortgage-holding borrowers, and grades C–E, which are the highest risk-adjusted returns in the book. Leave joint applications alone: riskier, but already paid for.
-
-### Process changes
-
-1. **Add loan purpose and verification-trigger status to the pricing model as rated factors.** They are collected at application and currently discarded. This is the finding with the longest shelf life — the segments will drift, the fact that the model is blind to them will not.
-2. **Log *why* verification was triggered, not just its outcome.** Finding 1 says the trigger carries the signal. Nobody is currently capturing it.
-3. **Stop treating low DTI as a strength in isolation.** Pair it with credit-file depth before it earns a pricing benefit.
-4. **Report the monthly uncompensated-risk watchlist** (`sql/04_decision_framework.sql`, Q4) to the credit committee.
+The three warning signs are not just measuring the same thing twice, and not one of them affects the interest rate.
 
 ---
 
-## 7. Measurable business impact
+## 6. What I would recommend
 
-### 7.1 The scenarios
+I put every loan into one of three groups, each with an action rather than an observation.
 
-| | Net yield | Uplift | On this $144.6M book | On $500M originations |
+### Group 1: Stop making these loans
+**1,026 loans · $18.3M · profit margin −0.18%**
+
+The rule: the loan is for buying a house, **or** it is grade A or B and the income was verified.
+
+These loans do not earn enough to cover what they cost. The lender is paying to own them.
+
+**Being honest about this one:** group 1 loses money under my main assumptions, and under 8 of the 12 stress tests I ran. Under the most generous set of assumptions it just about breaks even at +0.8%. It is the worst of the three groups in *every* test I ran, but it is only clearly loss-making in most of them, not all. If the credit team preferred a softer option, charging these loans an extra 6% instead of refusing them gets to a similar place. That maths is in `sql/04_decision_framework.sql`.
+
+### Group 2: Charge these 4% more
+**1,720 loans · $21.6M · profit margin +2.51%**
+
+The rule: the remaining risky purposes (medical, car, big purchase, moving), **or** the borrower owns their home outright.
+
+These do make money. They just make 3.65% less than the good loans while carrying more risk. The answer is to charge for the risk, not to refuse it.
+
+### Group 3: Do more of these
+**7,254 loans · $104.6M · profit margin +6.16%**
+
+Everything else. In particular the lender should go after more credit card refinancing, more borrowers who have a mortgage, and more grade C to E loans, because those are the best returns in the book once you account for risk. Joint applications should be left exactly as they are: riskier, but already paid for.
+
+### Four changes to how they work
+
+1. **Put loan purpose and verification status into the pricing model.** They already collect both at application and then throw them away. This is the recommendation with the longest shelf life. The specific groups will shift over time. The fact that the model is blind to these fields will not.
+2. **Record *why* income was verified, not just that it was.** Finding 1 says the trigger is where the information is. Nobody is currently saving it.
+3. **Stop treating low debt-to-income as a good sign on its own.** Check how long the borrower's credit history is before giving them credit for it.
+4. **Send the credit team a monthly watch list** of live loans carrying these warning signs. The query is in `sql/04_decision_framework.sql`.
+
+---
+
+## 7. What it is worth
+
+### The two options
+
+| | Profit margin | Improvement | On this $144.6M book | On $500M of lending |
 |---|---|---|---|---|
-| Current | 4.81% | — | — | — |
-| **A** — decline Tier 1, redeploy to Core | 5.61% | **+80bps** | +$1.16M | +$4.02M |
-| **B** — A, plus reprice Tier 2 +400bps | **6.19%** | **+138bps** | **+$2.00M** | **+$6.92M** |
+| Doing nothing | 4.81% | — | — | — |
+| **Option A:** stop group 1, lend that money to group 3 instead | 5.61% | **+0.80%** | +$1.16M | +$4.02M |
+| **Option B:** option A, plus charge group 2 an extra 4% | **6.19%** | **+1.38%** | **+$2.00M** | **+$6.92M** |
 
 ![Impact waterfall](outputs/charts/05_impact_waterfall.png)
 
-### 7.2 The one behavioural assumption
+### The one thing I had to guess
 
-Scenario B assumes 35% of repriced Tier 2 borrowers leave for a cheaper lender. That is a guess, so it was flexed across its entire possible range:
+Option B assumes that when you charge people more, 35% of them walk away to a cheaper lender. I have no way to know that number from this data, so I tested every possible value:
 
-| Attrition | 0% | 20% | 35% | 50% | 70% | 100% |
+| If this many leave | 0% | 20% | 35% | 50% | 70% | 100% |
 |---|---|---|---|---|---|---|
-| Uplift | +140bps | +139bps | **+138bps** | +138bps | +136bps | +135bps |
+| Improvement | +1.40% | +1.39% | **+1.38%** | +1.38% | +1.36% | +1.35% |
 
-The recommendation is insensitive to it. Even if *every* repriced borrower walks, the uplift is +135bps, because the capital redeploys into Core at +6.16%.
+It barely matters. Even if every single repriced borrower leaves, the answer is still +1.35%, because the money they take with them gets lent to group 3 instead, which earns 6.16%.
 
-### 7.3 Does the conclusion survive the assumptions?
+### Does the answer survive if my assumptions are wrong?
 
 ![Sensitivity](outputs/charts/06_sensitivity.png)
 
-Roll rates flexed from optimistic (15/30/55%) to very severe (60/75/95%), plus LGD, funding, servicing and the lifetime anchor moved one at a time.
+I re-ran everything with the write-off assumptions set from optimistic (15/30/55%) to very pessimistic (60/75/95%). Then I moved the recovery rate, the funding cost, the running cost and the lifetime loss estimate one at a time.
 
-**The tier ranking — Core > Tier 2 > Tier 1 — held in all 16 scenarios.** Loss *levels* move with the assumptions, as they should. The *ordering* that the recommendation depends on does not.
+That is 16 scenarios in total. **The order of the three groups was the same in all 16: group 3 best, group 2 middle, group 1 worst.**
 
-### 7.4 How to know whether it worked
+The size of the losses moves around, which it should, because I am guessing at those. The ranking that the whole recommendation depends on does not move at all.
 
-A number in a deck is not an impact. The measurement plan:
+### How you would know if it actually worked
 
-| Horizon | Metric | Target |
+A number in a slide deck is not a result. This is how I would check:
+
+| When | What to measure | What good looks like |
 |---|---|---|
-| Month 1 | Applications flagged by the overlay | ~27% of volume, matching backtest |
-| Month 3 | Tier 2 acceptance rate after repricing | ≥65% (the 35% attrition assumption) |
-| Month 6 | Early impairment, new vintage vs Q1-2018 | 1.78% → ≤1.35% |
-| Month 12 | Blended net yield | 4.81% → ≥5.90% |
-| Month 12 | Overlay-declined applications funded by competitors | Tracked — the false-positive check |
+| Month 1 | How many applications the new rules flag | Around 27% of them, matching what I found here |
+| Month 3 | How many group 2 borrowers accept the higher rate | 65% or more |
+| Month 6 | Missed payments on new loans vs this book | Down from 1.78% to 1.35% or lower |
+| Month 12 | Overall profit margin | Up from 4.81% to 5.90% or higher |
+| Month 12 | Rejected applicants who got a loan elsewhere and paid it fine | Tracked, to catch rules that are too strict |
 
-**Run it as a champion/challenger, not a switch.** Hold out 10% of qualifying applications from the overlay for twelve months. Without a control group, a benign macro quarter will take credit for the analyst's work and an adverse one will take the blame.
+**Run it as a test, not a switch.** Keep 10% of qualifying applications on the old rules for a year. Without that comparison group, a good year in the economy will take the credit for your work and a bad year will get you blamed for it.
 
 ---
 
 ## 8. What I would do next
 
-- **Multi-vintage replication.** One vintage in a benign quarter is one observation. The verification interaction is the specific claim I would most want to see hold in 2019 and 2020 books.
-- **Get the verification trigger.** Finding 1 infers the mechanism from the outcome. The trigger reason would test it directly, and it is a field the platform already has.
-- **Competing-risk treatment of prepayment.** 447 loans were fully repaid within four months. Early prepayment removes good credits from the denominator and is being ignored here.
-- **A scorecard, once the seasoning supports one.** At 178 events, a model would fit the noise. At 24 months and ~900 events, a proper scorecard with out-of-time validation becomes defensible. Deciding *not* to model yet is part of the analysis.
+- **Check it holds on other years.** One set of loans from one good year is one data point. The verification finding is the one I would most want to see again in 2019 and 2020 loans.
+- **Get the reason for verification.** I worked out the likely explanation for finding 1 by reasoning about it. The actual trigger reason would let me test it directly, and LendingClub already has that field.
+- **Handle early repayment properly.** 447 borrowers paid their loan off completely within four months. Those are good customers leaving the pool, and I ignored that.
+- **Build a scoring model, but later.** With only 178 missed payments, a model would learn noise. At two years and roughly 900 events, it would be worth doing properly with a proper out-of-time test. Deciding not to model yet was a deliberate choice, not something I skipped.
 
 ---
 
-## Repository
+## What is in this repo
 
 ```
 credit-risk-analysis/
-├── README.md                      # this case study
+├── README.md                      this write-up
 ├── requirements.txt
 ├── data/
-│   ├── raw/loans_full_schema.csv  # real LendingClub Q1-2018 originations
-│   └── README.md                  # provenance and data dictionary
+│   ├── raw/loans_full_schema.csv  the real LendingClub data
+│   └── README.md                  where it came from, what every column means
 ├── sql/
-│   ├── 01_portfolio_overview.sql  # baseline, delinquency waterfall, grade check
-│   ├── 02_hypothesis_tests.sql    # H1-H5 with Wilson intervals (SQL macros)
-│   ├── 03_segment_economics.sql   # net yield by segment, loss concentration
-│   └── 04_decision_framework.sql  # decision tiers, scenario model, watchlist
+│   ├── 01_portfolio_overview.sql  the basics, and a check that the grade works
+│   ├── 02_hypothesis_tests.sql    my six hypotheses, with confidence ranges
+│   ├── 03_segment_economics.sql   profit margin by group
+│   └── 04_decision_framework.sql  the three groups, the money, the watch list
 ├── python/
-│   ├── 01_build_db.py             # load, clean, engineer, document assumptions
-│   ├── 02_run_sql.py              # SQL runner -> console + CSV
-│   ├── 03_statistical_tests.py    # Fisher exact, logistic regression, interaction
-│   ├── 04_sensitivity.py          # assumption stress tests
-│   └── 05_charts.py               # figure export
-├── dashboard/index.html           # single-page interactive dashboard
+│   ├── 01_build_db.py             load and clean the data
+│   ├── 02_run_sql.py              run the SQL, save the results
+│   ├── 03_statistical_tests.py    significance tests and regression
+│   ├── 04_sensitivity.py          the 16 stress tests
+│   └── 05_charts.py               the charts above
+├── dashboard/index.html           interactive dashboard, opens in any browser
 └── outputs/
-    ├── charts/                    # figures used above
-    └── tables/                    # every query result as CSV
+    ├── charts/                    the 6 charts
+    └── tables/                    every result as a CSV
 ```
 
-**Stack:** Python (pandas, DuckDB, statsmodels, scipy, matplotlib) · SQL (DuckDB) · HTML/CSS/JS dashboard
+Everything here is produced by running those scripts on the raw CSV. I did not type any number into this README by hand, so if you change an assumption in `python/01_build_db.py` and re-run it, all of this updates.
 
-### Reproduce everything
+## The dashboard
 
-```bash
-pip install -r requirements.txt
-python python/01_build_db.py          # CSV -> DuckDB
-python python/02_run_sql.py           # every SQL file -> console + outputs/tables/
-python python/03_statistical_tests.py # Fisher exact, logistic regression, interaction
-python python/04_sensitivity.py       # 16 assumption scenarios
-python python/05_charts.py            # outputs/charts/*.png
-python python/06_dashboard_data.py    # database -> dashboard/data.json
-python python/07_build_dashboard.py   # -> dashboard/index.html (self-contained)
-```
+`dashboard/index.html` is a single file. Open it in a browser, no setup needed.
 
-Every number in this README and on the dashboard is produced by that pipeline.
-Nothing is typed in by hand, so a change to an assumption in
-`python/01_build_db.py` propagates to all of it.
+- **Drag the sliders** for how many borrowers leave and how much extra to charge, and the whole model recalculates in front of you.
+- **Switch the main chart** between profit margin and missed payments, to see why looking at missed payments alone gets you the wrong answer.
+- **Sort the hypothesis table**, including the ones I got wrong.
+- **The monthly watch list**, which is what the credit team would actually receive.
 
----
+The dashboard does no maths of its own. `python/06_dashboard_data.py` pulls the numbers out of the database and `python/07_build_dashboard.py` puts them into the page, so it cannot disagree with the analysis.
 
-## Interactive dashboard
+## Where the data came from
 
-`dashboard/index.html` is a single self-contained file — open it directly in a
-browser, no server required.
-
-- **Live scenario model.** Move the Tier 2 attrition and repricing-premium sliders
-  and the waterfall, the uplift and the headline recommendation all recompute from
-  the tier balances in the database.
-- **Metric toggle** on the segment league table, so you can see why impairment rate
-  alone would cut the wrong end of the book.
-- **Sortable hypothesis register**, including the tests that failed.
-- **Monthly watchlist** — every impaired loan carrying an uncompensated-risk flag.
-- Wilson intervals on every rate, hover detail on every mark, and a dark mode.
-
-It is a rendering layer only: `python/06_dashboard_data.py` exports the figures
-from DuckDB and `python/07_build_dashboard.py` inlines them, so the dashboard can
-never disagree with the analysis.
-
----
-
-## Sources
-
-- [LendingClub `loans_full_schema`](https://www.openintro.org/data/index.php?data=loans_full_schema) — OpenIntro
-- [Rdatasets mirror](https://github.com/vincentarelbundock/Rdatasets/blob/master/csv/openintro/loans_full_schema.csv) — direct CSV
+- [LendingClub `loans_full_schema`](https://www.openintro.org/data/index.php?data=loans_full_schema), published by OpenIntro
+- [Direct CSV on Rdatasets](https://github.com/vincentarelbundock/Rdatasets/blob/master/csv/openintro/loans_full_schema.csv)

@@ -1,6 +1,6 @@
 # Finding Risk That Nobody Charged For: A $163M Loan Book
 
-I analysed 10,000 real LendingClub personal loans and found about **$2 million a year** of risk the lender was carrying without charging for it.
+I analysed 10,000 real LendingClub personal loans and found about $2 million a year in risk that wasn't being properly priced.
 
 **Tools:** SQL (DuckDB) · Python (pandas, scipy, statsmodels) · HTML/JS dashboard
 **[Live dashboard](dashboard/index.html)** · **[Full write-up](CASE_STUDY.md)**

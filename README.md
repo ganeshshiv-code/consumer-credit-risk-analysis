@@ -69,7 +69,7 @@ python python/05_charts.py            # the charts
 | `data/` | The raw CSV and a [full data dictionary](data/README.md) |
 | `outputs/` | 6 charts and 21 result tables |
 
-Every number here comes from running those scripts on the raw data. I did not type any of them in by hand.
+Every number here is generated from the raw data by running the analysis scripts.
 
 **Data:** Real LendingClub records, [published by OpenIntro](https://www.openintro.org/data/index.php?data=loans_full_schema), mirrored on [Rdatasets](https://github.com/vincentarelbundock/Rdatasets). Nothing simulated.
 
